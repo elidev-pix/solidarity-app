@@ -8,6 +8,7 @@ import Action from './Components/Action.jsx'
 import Event from './Components/Event.jsx'
 import Comments from './Components/Comments.jsx'
 import Partners from './Components/Partners.jsx'
+import Contact from './Components/Contact.jsx'
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ function Home() {
       <Event />
       <Comments/> 
       <Partners/>
+      <Contact/>
       <div className='pt-48'>Home</div>     
     </div>
   )

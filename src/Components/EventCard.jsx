@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 function EventCard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-center justify-center px-2 gap-6">
-        <div className="flex flex-col rounded-2xl bg-white border-2 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
+        <div className="flex flex-col rounded-2xl bg-white border-1 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
             <div className='flex '>
                 <img src="/don1.jpg" alt="" className='rounded-md' />
             </div>
@@ -22,7 +22,7 @@ function EventCard() {
                 <MapPin size={20}/><span>Koulouba</span>
             </div>
         </div>
-        <div className="flex flex-col rounded-2xl bg-white border-2 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
+        <div className="flex flex-col rounded-2xl bg-white border-1 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
             <div className='flex '>
                 <img src="/don2.jpg" alt="" className='rounded-md' />
             </div>
@@ -40,7 +40,7 @@ function EventCard() {
                 <MapPin size={20}/><span>Koulouba</span>
             </div>
         </div>
-        <div className="flex flex-col rounded-2xl bg-white border-2 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
+        <div className="flex flex-col rounded-2xl bg-white border-1 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
             <div className='flex '>
                 <img src="/don3.jpg" alt="" className='rounded-md' />
             </div>
@@ -58,7 +58,7 @@ function EventCard() {
                 <MapPin size={20}/><span>Koulouba</span>
             </div>
         </div>
-        <div className="flex flex-col rounded-2xl bg-white border-2 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
+        <div className="flex flex-col rounded-2xl bg-white border-1 border-[#B36CB2] shadow-lg overflow-hidden h-96 w-64 p-4 gap-4">
             <div className='flex '>
                 <img src="/don4.jpg" alt="" className='rounded-md' />
             </div>

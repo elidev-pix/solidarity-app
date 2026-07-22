@@ -36,11 +36,16 @@ function Partners() {
         <div className="flex items-center justify-center gap-8 w-max animate-infinite-scroll hover:[animation-play-state:paused]">
             {allPartners.map((partner, index) => (
               /* shrink-0 empêche l'image de se faire déformer */
-              <div 
-                key={index} 
-                className="w-48 h-48 shrink-0"
+              <div
+              key={index} 
+                className="w-64 h-46 bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center justify-center shrink-0"
               >
-                <img src={partner.image} alt="" className='w-full h-full object-cover rounded-md shadow-lg' />
+                {/* object-contain préserve le ratio du logo sans le déformer */}
+                <img 
+                  src={partner.image} 
+                  alt="" 
+                  className='max-w-full max-h-full object-contain' 
+                />
               </div>
             ))}
         </div>
