@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* 1. Déclarer les fichiers de polices */
+@font-face {
+  font-family: "jakarta";
+  src: url("./assets/fonts/PlusJakartaSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "extraMontserrat";
+  src: url("./assets/fonts/Montserrat-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fraunces";
+  src: url("./assets/fonts/Fraunces_72pt-Bold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+/* 2. Enregistrer les polices dans le thème Tailwind CSS v4 */
+@theme {
+  --font-jakarta: "jakarta", sans-serif;
+  --font-montserrat: "extraMontserrat", sans-serif;
+  --font-fraunces: "fraunces", serif;
+  
+  /* Définit Jakarta comme police par défaut pour toute l'application */
+  --default-font-family: var(--font-jakarta);
+}
