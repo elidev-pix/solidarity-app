@@ -44,12 +44,12 @@ function Comments() {
           to { transform: translateX(-50%); }
         }
         .animate-infinite-scroll {
-          animation: infinite-scroll 25s linear infinite;
+          animation: infinite-scroll 3600s linear infinite;
         }
       `}</style>
 
       <div className='flex flex-col items-center justify-center'>
-        <div className="mb-4">
+        <div className="flex items-center justify-center mb-4">
           <span className="font-semibold font-fraunces text-[#D6336C] text-4xl">
             Ils partagent notre vision
           </span>

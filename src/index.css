@@ -31,3 +31,64 @@
   /* Définit Jakarta comme police par défaut pour toute l'application */
   --default-font-family: var(--font-jakarta);
 }
+
+/* Animations globales réutilisables */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out both;
+}
+
+/* Décalages pour effet "cascade" sur des listes/cartes */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+/* Glow subtil rose/violet au survol */
+.glow-pink {
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.glow-pink:hover {
+  box-shadow: 0 0 24px rgba(214, 51, 108, 0.28);
+  transform: translateY(-2px);
+}
+
+.glow-purple {
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.glow-purple:hover {
+  box-shadow: 0 0 24px rgba(179, 108, 178, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Lien de nav avec soulignement animé */
+.nav-link {
+  position: relative;
+  transition: color 0.25s ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #D6336C;
+  transition: width 0.3s ease;
+}
+.nav-link:hover {
+  color: #D6336C;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Respect du prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up { animation: none; opacity: 1; transform: none; }
+  .glow-pink, .glow-purple { transition: none; }
+}

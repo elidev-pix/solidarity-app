@@ -1,5 +1,6 @@
 import React from 'react'
 import { Users, Utensils, HandHeart, Baby, ShieldPlus, Leaf } from 'lucide-react'
+import ScrollReveal from './ScrollReveal'
 
 const actions = [
   {
@@ -67,9 +68,9 @@ function Action() {
           </h2>
         </div>
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-        {actions.map(({ icon: Icon, iconBg, iconColor, title, description }) => (
+          {actions.map(({ icon: Icon, iconBg, iconColor, title, description }, index) => (
+           <ScrollReveal key={title} delay={index * 80} distance={20}>
             <div
-            key={title}
             className="flex flex-col h-full rounded-[28px] border border-gray-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md"
             >
             <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${iconBg}`}>
@@ -84,6 +85,7 @@ function Action() {
                 {description}
             </p>
             </div>
+            </ScrollReveal>
         ))}
         </div>
     </div>
