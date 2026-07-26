@@ -35,7 +35,7 @@ export function Arc() {
         <Map
           className="h-full w-full"
           center={[hub.lng, hub.lat]}
-          zoom={3}
+          zoom={4.5}
           style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
         >
           <MapArc
