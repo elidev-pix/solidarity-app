@@ -219,6 +219,7 @@ const Map = forwardRef(function Map(
     currentStyleRef.current = initialStyle;
 
     const map = new MapLibreGL.Map({
+
       container: containerRef.current,
       style: initialStyle,
       renderWorldCopies: false,
@@ -229,11 +230,19 @@ const Map = forwardRef(function Map(
       ...viewport,
     });
 
+    map.on("error", (e) => {
+      console.error("MapLibre error:", e.error?.message ?? e.error, e);
+    });
+
     const styleLoadHandler = () => {
+      console.log("style.load fired");
       styleSwapInFlightRef.current = false;
       setIsStyleLoaded(true);
     };
-    const loadHandler = () => setIsLoaded(true);
+    const loadHandler = () => {
+      console.log("load fired");
+      setIsLoaded(true);
+    };
 
     // Viewport change handler - skip if triggered by internal update
     const handleMove = () => {
@@ -246,7 +255,13 @@ const Map = forwardRef(function Map(
     map.on("move", handleMove);
     setMapInstance(map);
 
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+    resizeObserver.observe(containerRef.current);
+
     return () => {
+      resizeObserver.disconnect();
       map.off("load", loadHandler);
       map.off("style.load", styleLoadHandler);
       map.off("move", handleMove);

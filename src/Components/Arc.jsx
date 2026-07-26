@@ -6,13 +6,12 @@ import {
   MarkerLabel,
 } from "./ui/map";
 
-const hub = { name: "Burkina Faso", lng: -1.5339, lat: 12.2383};
+const hub = { name: "Burkina Faso", lng: -1.5339, lat: 12.2383 };
 
 const destinations = [
   { name: "Côte d'ivoire", lng: -5.5471, lat: 7.5400 }
 ];
 
-// Suppression du "as [number, number]" pour le rendre valide en JavaScript pur
 const arcs = destinations.map((dest) => ({
   id: dest.name,
   from: [hub.lng, hub.lat],
@@ -21,43 +20,62 @@ const arcs = destinations.map((dest) => ({
 
 export function Arc() {
   return (
-    <div className="relative h-[500px] w-full max-w-7xl mx-auto">
-      <Map
-  className="h-full w-full"
-  center={[hub.lng, hub.lat]}
-  zoom={3}
-  style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
->
-        <MapArc
-          data={arcs}
-          paint={{
-            "line-color": "#3b82f6",
-            "line-dasharray": [2, 2],
-          }}
-          interactive={false}
-        />
+    <div className="flex flex-col items-center justify-center gap-8 py-16 px-4">
+      <div className="text-center max-w-2xl">
+        <span className="font-semibold font-fraunces text-[#D6336C] text-4xl">
+          Notre rayonnement régional
+        </span>
+        <p className="mt-4 text-gray-600 leading-7">
+          Depuis le Burkina Faso, nos actions solidaires s'étendent au-delà des frontières
+          pour toucher les communautés vulnérables de la sous-région.
+        </p>
+      </div>
 
-        <MapMarker longitude={hub.lng} latitude={hub.lat}>
-          <MarkerContent>
-            <div className="size-3 rounded-full border-2 border-white bg-blue-500" />
-            <MarkerLabel
-              position="top"
-              className="bg-background/80 rounded-sm px-1.5 py-0.5 text-[11px] font-semibold backdrop-blur"
-            >
-              {hub.name}
-            </MarkerLabel>
-          </MarkerContent>
-        </MapMarker>
+      <div className="relative h-[500px] w-full max-w-7xl rounded-3xl overflow-hidden border border-gray-100 shadow-sm bg-white">
+        <Map
+          className="h-full w-full"
+          center={[hub.lng, hub.lat]}
+          zoom={3}
+          style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+        >
+          <MapArc
+            data={arcs}
+            paint={{
+              "line-color": "#D6336C",
+              "line-width": 2.5,
+              "line-opacity": 0.85,
+              "line-dasharray": [2, 2],
+            }}
+            interactive={false}
+          />
 
-        {destinations.map((dest) => (
-          <MapMarker key={dest.name} longitude={dest.lng} latitude={dest.lat}>
+          <MapMarker longitude={hub.lng} latitude={hub.lat}>
             <MarkerContent>
-              <div className="size-2 rounded-full border-2 border-white bg-blue-500" />
-              <MarkerLabel position="top">{dest.name}</MarkerLabel>
+              <div className="size-3 rounded-full border-2 border-white bg-[#D6336C] shadow-md" />
+              <MarkerLabel
+                position="top"
+                className="bg-white/90 rounded-full px-2.5 py-1 text-[11px] font-bold font-jakarta text-[#D6336C] shadow-sm backdrop-blur"
+              >
+                {hub.name}
+              </MarkerLabel>
             </MarkerContent>
           </MapMarker>
-        ))}
-      </Map>
+
+          {destinations.map((dest) => (
+            <MapMarker key={dest.name} longitude={dest.lng} latitude={dest.lat}>
+              <MarkerContent>
+                <div className="size-2.5 rounded-full border-2 border-white bg-[#B36CB2] shadow-md" />
+                <MarkerLabel
+                  position="top"
+                  className="bg-white/90 rounded-full px-2.5 py-1 text-[11px] font-bold font-jakarta text-[#B36CB2] shadow-sm backdrop-blur"
+                >
+                  {dest.name}
+                </MarkerLabel>
+              </MarkerContent>
+            </MapMarker>
+          ))}
+        </Map>
+      </div>
     </div>
   );
 }
