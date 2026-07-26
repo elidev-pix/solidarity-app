@@ -10,6 +10,7 @@ import Comments from './Components/Comments.jsx'
 import Partners from './Components/Partners.jsx'
 import Contact from './Components/Contact.jsx'
 import Footer from './Components/Footer.jsx'
+import Arc from './Components/Arc.jsx'
 
 function Home() {
   return (
@@ -24,6 +25,7 @@ function Home() {
       <Comments/> 
       <Partners/>
       <Contact/>
+      <Arc/>
       <Footer/>   
     </div>
   )

@@ -45,7 +45,7 @@ function EventCard() {
           distance={20}
           threshold={0.2}
         >
-          <div className="glow-purple flex flex-col rounded-2xl bg-white border-1 border-[#B36CB2] shadow-lg overflow-hidden h-auto min-h-96 w-full max-w-xs mx-auto p-4 gap-4">
+          <div className="glow-purple flex flex-col rounded-2xl bg-white border-1 border-gray-200 shadow-lg overflow-hidden h-auto min-h-96 w-full max-w-xs mx-auto p-4 gap-4">
             <div className="flex">
               <img src={img} alt={title} className="rounded-md w-full h-40 object-cover" />
             </div>

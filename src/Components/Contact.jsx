@@ -6,7 +6,7 @@ const infoCards = [
   { icon: Clock, bg: 'bg-red-200/50', color: 'text-red-500', title: 'Horaires', value: 'Ouvert 24h/24' },
   { icon: Mail, bg: 'bg-purple-200/50', color: 'text-purple-500', title: 'Notre Email', value: 'solidaritygroupbf@yahoo.com' },
   { icon: PhoneCall, bg: 'bg-blue-200/50', color: 'text-blue-500', title: 'Téléphone', value: '+226 58 47 49 75' },
-  { icon: MapPin, bg: 'bg-green-200/50', color: 'text-green-500', title: 'Nous rendre visite', value: 'Ouagadougou' },
+  { icon: MapPin, bg: 'bg-green-200/50', color: 'text-green-500', title: 'Nous rendre visite', value: 'Ouagadougou, Kolgho Naaba Secteur 9' },
 ]
 
 function Contact() {
