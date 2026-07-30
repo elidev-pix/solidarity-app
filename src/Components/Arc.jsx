@@ -6,10 +6,11 @@ import {
   MarkerLabel,
 } from "./ui/map";
 
-const hub = { name: "Burkina Faso", lng: -1.5339, lat: 12.2383 };
+const hub = { name: "Ouagadougou", lng: -1.5339, lat: 12.3714 };
 
 const destinations = [
-  { name: "Côte d'ivoire", lng: -5.5471, lat: 7.5400 }
+  { name: "Abidjan", lng: -4.0083, lat: 5.3599 },
+  {name: "Koudougou", lng:-2.343437380798104, lat: 12.258411202352654}
 ];
 
 const arcs = destinations.map((dest) => ({
@@ -35,7 +36,7 @@ export function Arc() {
         <Map
           className="h-full w-full"
           center={[hub.lng, hub.lat]}
-          zoom={4.5}
+          zoom={4}
           style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
         >
           <MapArc
@@ -54,7 +55,7 @@ export function Arc() {
               <div className="size-3 rounded-full border-2 border-white bg-[#D6336C] shadow-md" />
               <MarkerLabel
                 position="top"
-                className="bg-white/90 rounded-full px-2.5 py-1 text-[11px] font-bold font-jakarta text-[#D6336C] shadow-sm backdrop-blur"
+                className="bg-white/90 rounded-full px-2.5 py-1 text-md font-bold font-jakarta text-[#D6336C] shadow-sm backdrop-blur"
               >
                 {hub.name}
               </MarkerLabel>
@@ -66,8 +67,8 @@ export function Arc() {
               <MarkerContent>
                 <div className="size-2.5 rounded-full border-2 border-white bg-[#B36CB2] shadow-md" />
                 <MarkerLabel
-                  position="top"
-                  className="bg-white/90 rounded-full px-2.5 py-1 text-[11px] font-bold font-jakarta text-[#B36CB2] shadow-sm backdrop-blur"
+                  position=""
+                  className="bg-white/90 rounded-full px-2.5 py-1 text-xs font-bold font-jakarta text-[#B36CB2] shadow-sm backdrop-blur"
                 >
                   {dest.name}
                 </MarkerLabel>

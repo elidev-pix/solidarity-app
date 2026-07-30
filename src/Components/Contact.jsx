@@ -11,7 +11,7 @@ const infoCards = [
 
 function Contact() {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-10">
+    <div id='contact' className="flex flex-col items-center justify-center gap-4 py-10">
       <ScrollReveal>
         <div className="mb-2 text-center">
           <span className="font-semibold font-fraunces text-[#D6336C] text-4xl">

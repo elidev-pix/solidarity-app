@@ -2,7 +2,7 @@ import React from "react";
 
 function Hero() {
   return (
-    <div>
+    <div id="hero">
       <div className="mb-2 text-center">
         <span className="font-semibold font-fraunces text-[#D6336C] text-3xl sm:text-4xl">
           Actualités

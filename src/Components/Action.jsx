@@ -55,14 +55,14 @@ const actions = [
 
 function Action() {
   return (
-    <div>
+    <div id='action'>
         <div className="mb-16 text-center">
           <span className="font-semibold font-fraunces text-[#D6336C] text-4xl">
             Nos actions
           </span>
 
           <h2 className="mt-4 text-4xl font-bold text-gray-900">
-            "Des actions ciblées pour impact durable 
+            "Des actions ciblées pour un impact durable 
             <br />
             auprès des communautés vulnérables"
           </h2>

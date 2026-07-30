@@ -4,11 +4,11 @@ import { Menu, X } from 'lucide-react'
 
 const navItems = [
   { label: 'Accueil', href: '/' },
-  { label: 'À propos', href: '/about' },
-  { label: 'Nos actions', href: '/contact' },
-  { label: 'Actualités', href: '/actualités' },
-  { label: 'Evènements', href: '/Evènements' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'À propos', href: '#about' },
+  { label: 'Nos actions', href: '#action' },
+  { label: 'Actualités', href: '#hero' },
+  { label: 'Evènements', href: '#event' },
+  { label: 'Contact', href: '#contact' },
 ]
 
 function Header() {

@@ -4,10 +4,10 @@ import ScrollReveal from './ScrollReveal.jsx'
 
 const quickLinks = [
   { label: 'Accueil', href: '/' },
-  { label: 'À propos', href: '/about' },
-  { label: 'Nos actions', href: '/contact' },
-  { label: 'Actualités', href: '/actualités' },
-  { label: 'Evènements', href: '/Evènements' },
+  { label: 'À propos', href: '#about' },
+  { label: 'Nos actions', href: '#action' },
+  { label: 'Actualités', href: '#hero' },
+  { label: 'Evènements', href: '#event' },
 ]
 
 const legalLinks = [
@@ -31,18 +31,17 @@ const InstagramIcon = (props) => (
   </svg>
 )
 
-const XIcon = (props) => (
+const TikTokIcon = (props) => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M4 4l16 16M20 4L4 20" />
+    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
   </svg>
-)
+);
 
 const socials = [
-  { icon: FacebookIcon, href: '#', label: 'Facebook' },
-  { icon: InstagramIcon, href: '#', label: 'Instagram' },
-  { icon: XIcon, href: '#', label: 'X (Twitter)' },
+  { icon: FacebookIcon, href: 'https://www.facebook.com/profile.php?id=100086252212915', label: 'Facebook' },
+  { icon: InstagramIcon, href: 'https://www.instagram.com/solidarity_group?igsh=MTQ1dzQ1YmhiOWIwZw==', label: 'Instagram' },
+  { icon: TikTokIcon, href: 'https://www.tiktok.com/@solidarity_group?is_from_webapp=1&sender_device=pc', label: 'TikTok' },
 ]
-
 function Footer() {
   return (
     <footer className="bg-white border-t border-gray-100">
@@ -74,6 +73,8 @@ function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
+                  target="_blank"             
+                  rel="noopener noreferrer"
                   className="glow-pink flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 border border-gray-100 text-gray-500 hover:text-[#D6336C] hover:border-[#D6336C]/30 transition-colors"
                 >
                   <Icon className="h-[18px] w-[18px]" />
