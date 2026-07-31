@@ -7,35 +7,35 @@ const commentsData = [
     role: 'Gouverneur de la Région du Centre – Parrain 2025',
     stars: '★★★★★',
     text: "La solidarité portée par une jeunesse engagée constitue une véritable force pour notre société. Encourager ces initiatives, c’est contribuer à construire un Burkina Faso plus uni et plus résilient.",
-    avatar: '/com1.jpg'
+    avatar: '/coms1.jpeg'
   },
   {
     name: 'Assetou OUEDRAOGO',
     role: 'Marraine de la Semaine Caritative',
     stars: '★★★★★',
     text: "La solidarité est une valeur essentielle. Chaque geste posé en faveur des autres apporte de l’espoir et contribue à améliorer des vies.",
-    avatar: '/com2.jpg'
+    avatar: '/coms2.jpeg'
   },
   {
     name: 'Moussa DICKO',
     role: 'Représentant du Ministre de la Communication',
     stars: '★★★★★',
     text: "Monsieur le Ministre est très content, très heureux de voir qu'il y a une jeunesse au Burkina Faso qui est très consciente. Une jeunesse qui parle solidarité, qui parle d’action caritative. Le message, c’est vraiment de les féliciter et de les encourager dans cette dynamique pour le bonheur du Burkina Faso.",
-    avatar: '/com3.jpg'
+    avatar: '/coms3.jpeg'
   },
   {
     name: 'Atéridar Galip SOME',
     role: 'Directeur Général de la RTB',
     stars: '★★★★★',
     text: "Nous saluons l’engagement de Solidarity Group qui met en avant une jeunesse responsable, engagée et consciente de son rôle dans la construction du Burkina Faso. Les initiatives citoyennes comme celles-ci méritent d’être accompagnées et valorisées.",
-    avatar: '/com4.jpg'
+    avatar: '/coms4.jpeg'
   },
   {
     name: 'Pascaline NIKIEMA',
     role: 'Directrice Régionale des Eaux et Forêts',
     stars: '★★★★★',
     text: "La protection de l’environnement est une responsabilité collective. Nous encourageons cette initiative qui démontre que la jeunesse burkinabè peut être un acteur majeur dans la préservation de notre patrimoine naturel.",
-    avatar: '/com5.jpg'
+    avatar: '/coms5.jpeg'
   },
 
   // LES BÉNÉFICIAIRES DE NOS ACTIONS
@@ -44,28 +44,28 @@ const commentsData = [
     role: 'Promotrice de l’Orphelinat Cri du Cœur',
     stars: '★★★★★',
     text: "Donc je ne peux que les dire merci et puis vraiment les bénir. Santé, longévité, parce que c’est ça qui est la base. S’il y a la santé et la longévité, on peut tout espérer. Vraiment. Prospérité dans leurs études.",
-    avatar: '/com6.jpg'
+    avatar: '/coms6.jpeg'
   },
   {
     name: 'Pensionnaire',
     role: 'Orphelinat Cri du Cœur',
     stars: '★★★★★',
     text: "Je voulais leur dire grand merci. On a eu des habits, des moustiquaires, des médicaments, des jouets, du riz et des pâtes.",
-    avatar: '/com7.jpg'
+    avatar: '/undefined.webp'
   },
   {
     name: 'Porte-parole',
     role: 'Personnes déplacées internes',
     stars: '★★★★★',
     text: "Nous sommes très fiers et nous les remercions beaucoup. Nous voulons appeler les gens qui veulent nous aider à nous aider, de suivre leur exemple. C’est un bon exemple.",
-    avatar: '/com8.jpg'
+    avatar: '/undefined.webp'
   },
   {
     name: 'Porte-parole',
     role: 'Personnes déplacées internes',
     stars: '★★★★★',
     text: "Vraiment ici, notre vrai souci, c’est l’eau. L’eau nous manque. Et puis, il y a le manger aussi. Lui, il a fait ce qu’il peut, il continue à faire aussi. Nous le remercions beaucoup.",
-    avatar: '/com9.jpg'
+    avatar: '/undefined.webp'
   },
 
   // INSTITUTIONS
@@ -74,14 +74,14 @@ const commentsData = [
     role: 'Centre National de Transfusion Sanguine',
     stars: '★★★★★',
     text: "Le don de sang est un geste citoyen qui sauve des vies. Nous saluons la mobilisation de Solidarity Group qui contribue à sensibiliser la population sur l’importance du don volontaire de sang.",
-    avatar: '/com10.jpg'
+    avatar: '/coms8.jpeg'
   },
   {
     name: 'CHU Pédiatrique',
     role: 'Charles de Gaulle',
     stars: '★★★★★',
     text: "Votre action auprès des enfants hospitalisés représente un véritable message de solidarité, de compassion et d’espoir pour les familles.",
-    avatar: '/com11.jpg'
+    avatar: '/coms9.jpeg'
   },
 
   // NOS PARTENAIRES
@@ -90,49 +90,49 @@ const commentsData = [
     role: 'Radiodiffusion Télévision du Burkina',
     stars: '★★★★★',
     text: "Accompagner Solidarity Group, c’est soutenir une jeunesse engagée qui œuvre pour la solidarité, le vivre-ensemble et le bien-être des communautés. Ces initiatives citoyennes méritent d’être encouragées et valorisées.",
-    avatar: '/com12.jpg'
+    avatar: '/com.jpeg'
   },
   {
     name: 'Nephtali Média',
     role: 'Partenaire',
     stars: '★★★★★',
     text: "Nous avons découvert une équipe jeune, dynamique et déterminée, avec une réelle volonté d’apporter un impact positif dans la société. Solidarity Group représente une jeunesse qui agit et qui inspire.",
-    avatar: '/com13.jpg'
+    avatar: '/com.jpeg'
   },
   {
     name: 'Les Éditions Le Pays',
     role: 'Partenaire',
     stars: '★★★★★',
     text: "Les actions de Solidarity Group démontrent qu’une jeunesse consciente et organisée peut contribuer efficacement au développement social du Burkina Faso.",
-    avatar: '/com14.jpg'
+    avatar: '/com.jpeg'
   },
   {
     name: 'ZoodoMail',
     role: 'Partenaire',
     stars: '★★★★★',
     text: "Nous sommes heureux d’accompagner une organisation qui place l’humain au cœur de son engagement et qui apporte des réponses concrètes aux besoins des communautés.",
-    avatar: '/com15.jpg'
+    avatar: '/com.jpeg'
   },
   {
     name: "Nana’s Pastry",
     role: 'Partenaire',
     stars: '★★★★★',
     text: "Chaque contribution compte lorsqu’elle participe à apporter du sourire et de l’espoir aux personnes qui en ont besoin.",
-    avatar: '/com16.jpg'
+    avatar: '/com.jpeg'
   },
   {
     name: 'Éclat Pub',
     role: 'Partenaire',
     stars: '★★★★★',
     text: "Valoriser une cause comme celle portée par Solidarity Group, c’est contribuer à donner plus de visibilité aux actions positives qui transforment la société.",
-    avatar: '/com17.jpg'
+    avatar: '/EclatPub.jpeg'
   },
   {
     name: 'Wekre Digital',
     role: 'Partenaire',
     stars: '★★★★★',
     text: "Solidarity Group représente une jeunesse ambitieuse et engagée qui utilise ses compétences pour servir une cause noble.",
-    avatar: '/com18.jpg'
+    avatar: '/Wekre.jpeg'
   },
 
   // LA JEUNESSE QUI NOUS SOUTIENT
@@ -141,56 +141,56 @@ const commentsData = [
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Félicitations à Solidarity Group pour toutes ces belles initiatives. Voir des jeunes se mobiliser pour aider les autres est une source de fierté. Continuez à garder cette énergie et cette volonté de faire le bien autour de vous.",
-    avatar: '/com19.jpg'
+    avatar: '/coms10.jpeg'
   },
   {
     name: 'Corinne KIEMTRORE',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Ce que vous faites est vraiment inspirant. La solidarité ne se limite pas aux paroles, elle se voit dans les actions. Bravo à toute l’équipe de Solidarity Group pour cet engagement envers la communauté.",
-    avatar: '/com20.jpg'
+    avatar: '/coms11.jpeg'
   },
   {
     name: 'Souleymane KABORE',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Félicitations à toute l’équipe de Solidarity Group. Vous démontrez qu’avec de la détermination, de l’organisation et un esprit d’équipe, la jeunesse peut avoir un véritable impact dans la société. Continuez ainsi.",
-    avatar: '/com21.jpg'
+    avatar: '/coms12.jpeg'
   },
   {
     name: 'Carel BAMOGO',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Une jeunesse qui décide d’agir pour les autres mérite d’être encouragée. Force et courage à Solidarity Group pour toutes ces actions qui apportent du sourire et de l’espoir.",
-    avatar: '/com22.jpg'
+    avatar: '/coms13.jpeg'
   },
   {
     name: 'Daryl NIKIEMA',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Félicitations à Solidarity Group pour cette belle vision. Ce n’est pas seulement une association, c’est une famille de jeunes qui veulent apporter leur contribution au changement. Continuez à inspirer.",
-    avatar: '/com23.jpg'
+    avatar: '/coms14.jpeg'
   },
   {
     name: 'Marie Noëlle TRAORE 🇨🇮',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "La solidarité dépasse les frontières. Voir des jeunes du Burkina Faso s’engager avec autant de cœur montre que les valeurs humaines peuvent unir toute une génération africaine. Bravo à Solidarity Group pour cette belle dynamique.",
-    avatar: '/com24.jpg'
+    avatar: '/undefined.webp'
   },
   {
     name: 'Alban TIENOU 🇲🇱',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Votre engagement est un exemple pour la jeunesse africaine. Continuez à porter ces valeurs de partage, d’entraide et de fraternité. Les grandes transformations commencent toujours par des personnes qui décident d’agir.",
-    avatar: '/com25.jpg'
+    avatar: '/coms15.jpeg'
   },
   {
     name: 'Pito KAMATÉ 🇲🇱',
     role: 'Jeunesse',
     stars: '★★★★★',
     text: "Félicitations à Solidarity Group pour son engagement. Votre parcours montre qu’une jeunesse consciente peut créer un impact positif autour d’elle. Continuez à avancer et à inspirer d’autres jeunes.",
-    avatar: '/com26.jpg'
+    avatar: '/coms16.jpeg'
   },
 
   // MEMBRES ET BÉNÉVOLES
@@ -199,7 +199,7 @@ const commentsData = [
     role: 'Solidarity Group',
     stars: '★★★★★',
     text: "Nous avons compris qu’il n’est pas nécessaire d’avoir beaucoup pour aider. Il suffit d’avoir la volonté, le temps et l’engagement pour faire une différence dans la vie des autres.",
-    avatar: '/com27.jpg'
+    avatar: '/undefined.webp'
   }
 ]
 
@@ -245,7 +245,7 @@ function Comments() {
                   <p className="text-slate-600 text-sm italic relative z-10 mb-6">"{comment.text}"</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <img className="w-10 h-10 rounded-full object-cover" src={comment.avatar} alt={comment.name} />
+                  <img className="w-20 h-20 rounded-full object-cover" src={comment.avatar} alt={comment.name} />
                   <div>
                     <div className="font-semibold text-sm text-slate-800">{comment.name}</div>
                     <div className="text-xs text-slate-400">{comment.role}</div>

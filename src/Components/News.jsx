@@ -1,8 +1,8 @@
 import React from "react";
 
-function Hero() {
+function News() {
   return (
-    <div id="hero">
+    <div id="News">
       <div className="mb-2 text-center">
         <span className="font-semibold font-fraunces text-[#D6336C] text-3xl sm:text-4xl">
           Actualités
@@ -15,7 +15,7 @@ function Hero() {
           <div className="relative overflow-hidden rounded-3xl w-full lg:w-2/3">
             <img
               src="/don1.jpg"
-              alt="Hero"
+              alt="News"
               className="w-full h-64 sm:h-80 lg:h-104 object-cover"
             />
             <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6">
@@ -52,4 +52,4 @@ function Hero() {
   );
 }
 
-export default Hero;
+export default News;

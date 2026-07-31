@@ -2,7 +2,7 @@ import React from 'react'
 import UpperHeader from './Components/UpperHeader.jsx'
 import Header from './Components/Header.jsx'
 import LowerHeader from './Components/LowerHeader.jsx'
-import Hero from './Components/Hero.jsx'
+import News from './Components/News.jsx'
 import About from './Components/About.jsx'
 import Action from './Components/Action.jsx'
 import Event from './Components/Event.jsx'
@@ -18,7 +18,7 @@ function Home() {
       <UpperHeader />
       <Header/>
       <LowerHeader/>
-      <Hero />
+      <News />
       <About />
       <Action />
       <Event />
