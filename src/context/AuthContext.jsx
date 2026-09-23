@@ -1,22 +1,28 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { useMembers } from '../data/mockMembers.js'
+import { loginRequest } from '../services/api.js'
 
 const AuthContext = createContext(null)
-
-const DEMO_ACCOUNTS = {
-  admin: { username: 'admin', password: 'admin123', role: 'admin' },
-  member: { username: 'SG-2026-001', password: 'member123', role: 'member' },
-}
 
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
-  const { data: members } = useMembers()
 
   useEffect(() => {
-    // Deviendra : supabase.auth.getSession() + supabase.auth.onAuthStateChange(...)
-    const stored = localStorage.getItem('sg_session')
-    setSession(stored ? JSON.parse(stored) : null)
+    const storedToken = localStorage.getItem('sg_token')
+    const storedSession = localStorage.getItem('sg_session')
+
+    if (storedToken && storedSession) {
+      try {
+        setSession(JSON.parse(storedSession))
+      } catch {
+        localStorage.removeItem('sg_token')
+        localStorage.removeItem('sg_session')
+      }
+    } else {
+      localStorage.removeItem('sg_token')
+      localStorage.removeItem('sg_session')
+    }
+
     setAuthLoading(false)
   }, [])
 
@@ -29,30 +35,45 @@ export function AuthProvider({ children }) {
   }, [session])
 
   async function login(username, password) {
-    // Deviendra : supabase.auth.signInWithPassword({ email, password })
-    await new Promise((r) => setTimeout(r, 500))
+    try {
+      const { data } = await loginRequest(username.trim(), password)
+      localStorage.setItem('sg_token', data.token)
 
-    if (username === DEMO_ACCOUNTS.admin.username && password === DEMO_ACCOUNTS.admin.password) {
-      const newSession = { role: 'admin', user: { name: 'Administrateur' } }
+      const newSession = {
+        role: data.user.role,
+        user: data.user,
+        isFirstLogin: data.user.isFirstLogin,
+      }
       setSession(newSession)
-      return { success: true, role: 'admin' }
+
+      return {
+        success: true,
+        role: data.user.role,
+        isFirstLogin: data.user.isFirstLogin,
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Impossible de contacter le serveur.',
+      }
     }
-    if (username === DEMO_ACCOUNTS.member.username && password === DEMO_ACCOUNTS.member.password) {
-      const memberData = members?.find((m) => m.id === username) || members?.[0]
-      const newSession = { role: 'member', user: memberData }
-      setSession(newSession)
-      return { success: true, role: 'member' }
-    }
-    return { success: false, error: 'Identifiants incorrects' }
   }
 
   function logout() {
     setSession(null)
-    // Deviendra : await supabase.auth.signOut()
+    localStorage.removeItem('sg_token')
+  }
+
+  function markPasswordChanged() {
+    setSession((current) => current && {
+      ...current,
+      isFirstLogin: false,
+      user: { ...current.user, isFirstLogin: false },
+    })
   }
 
   return (
-    <AuthContext.Provider value={{ session, authLoading, login, logout }}>
+    <AuthContext.Provider value={{ session, authLoading, login, logout, markPasswordChanged }}>
       {children}
     </AuthContext.Provider>
   )

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom' // <-- Ajout de Link
-import { LogIn, User, Lock, Info, ArrowLeft } from 'lucide-react' // <-- Ajout de ArrowLeft
+import { LogIn, User, Lock, ArrowLeft } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 
 const inputClass =
@@ -22,21 +22,10 @@ function Login() {
     const result = await login(username, password)
     setSubmitting(false)
     if (result.success) {
-      navigate(result.role === 'admin' ? '/admin' : '/member')
+      navigate(result.isFirstLogin ? '/change-password' : (result.role === 'admin' ? '/admin' : '/member'))
     } else {
       setError(result.error)
     }
-  }
-
-  function fillDemo(role) {
-    if (role === 'admin') {
-      setUsername('admin')
-      setPassword('admin123')
-    } else {
-      setUsername('SG-2026-001')
-      setPassword('member123')
-    }
-    setError('')
   }
 
   return (
@@ -72,7 +61,7 @@ function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className={inputClass}
-                placeholder="admin ou SG-2026-001"
+                placeholder="Ex. SGZ6VZ9C"
               />
             </div>
           </div>
@@ -102,28 +91,6 @@ function Login() {
           </button>
         </form>
 
-        {/* Comptes de démonstration */}
-        <div className="mt-6 bg-white rounded-2xl border border-dashed border-gray-200 p-5">
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 mb-3">
-            <Info size={14} /> Comptes de démonstration
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => fillDemo('admin')}
-              className="text-left text-xs bg-gray-50 hover:bg-gray-100 rounded-xl p-3 transition-colors"
-            >
-              <span className="block font-bold text-gray-700">Administrateur</span>
-              <span className="block text-gray-400 mt-1">admin / admin123</span>
-            </button>
-            <button
-              onClick={() => fillDemo('member')}
-              className="text-left text-xs bg-gray-50 hover:bg-gray-100 rounded-xl p-3 transition-colors"
-            >
-              <span className="block font-bold text-gray-700">Membre</span>
-              <span className="block text-gray-400 mt-1">SG-2026-001 / member123</span>
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   )

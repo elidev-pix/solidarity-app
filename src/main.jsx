@@ -7,6 +7,7 @@ import Home from './Home.jsx'
 import App from './App.jsx'
 import JoinUs from './Pages/JoinUs.jsx'
 import Login from './Pages/Login.jsx'
+import ChangePassword from './Pages/ChangePassword.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import DashboardLayout from './Layouts/DashboardLayout.jsx'
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
   { path: '/app', element: <App /> },
   { path: '/join', element: <JoinUs /> },
   { path: '/login', element: <Login /> },
+  {
+    path: '/change-password',
+    element: (
+      <ProtectedRoute>
+        <ChangePassword />
+      </ProtectedRoute>
+    ),
+  },
 
   {
     path: '/member',
