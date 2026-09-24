@@ -1,95 +1,81 @@
-import React, { useState, useEffect } from 'react'
-import { Save } from 'lucide-react'
-import { useSettings, updateSettings } from '../../data/mockSettings.js'
-import { Skeleton } from '../../Components/ui/skeleton.jsx'
+// Path: src/Pages/admin/AdminSettings.jsx
+import { useEffect, useState } from "react";
+import { settingsApi } from "@/services/api";
 
-function ToggleSwitch({ checked, onChange }) {
-  return (
-    <button
-      onClick={() => onChange(!checked)}
-      className={`relative w-14 h-8 rounded-full transition-colors ${checked ? 'bg-[#D6336C]' : 'bg-gray-200'}`}
-    >
-      <span
-        className={`absolute top-1 left-1 h-6 w-6 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-6' : 'translate-x-0'}`}
-      />
-    </button>
-  )
-}
+export default function AdminSettings() {
+    const [form, setForm] = useState(null);
+    const [saving, setSaving] = useState(false);
 
-function AdminSettings() {
-  const { data: settings, loading } = useSettings()
-  const [form, setForm] = useState(null)
-  const [saving, setSaving] = useState(false)
-  const [saved, setSaved] = useState(false)
+    useEffect(() => {
+        settingsApi.get().then(({ data }) => {
+            setForm({
+                membershipPeriodStart: data.membershipPeriodStart?.slice(0, 10) || "",
+                membershipPeriodEnd: data.membershipPeriodEnd?.slice(0, 10) || "",
+                annualContributionAmount: data.annualContributionAmount || 0,
+            });
+        }).catch(console.error);
+    }, []);
 
-  useEffect(() => {
-    if (settings) setForm(settings)
-  }, [settings])
+    if (!form) return <div className="p-6 text-sm text-gray-500">Chargement...</div>;
 
-  async function handleSave() {
-    setSaving(true)
-    await updateSettings(form)
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
-  }
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  if (loading || !form) {
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await settingsApi.update({
+                ...form,
+                annualContributionAmount: Number(form.annualContributionAmount),
+            });
+            alert("Paramètres enregistrés.");
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors de l'enregistrement.");
+        } finally {
+            setSaving(false);
+        }
+    };
+
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-4 max-w-xl">
-        <Skeleton className="h-6 w-1/2" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-      </div>
-    )
-  }
+        <div className="p-6 max-w-xl">
+            <h1 className="font-fraunces text-2xl font-bold text-gray-800">Paramètres</h1>
 
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6 max-w-xl flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="font-bold text-gray-900">Ouverture des adhésions</h3>
-          <p className="text-sm text-gray-500 mt-1">
-            Active ou ferme la candidature en ligne sur la page "Rejoindre".
-          </p>
-        </div>
-        <ToggleSwitch
-          checked={form.registrationOpen}
-          onChange={(val) => setForm({ ...form, registrationOpen: val })}
-        />
-      </div>
+            <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                <span className="text-sm font-semibold text-gray-700">Période d'adhésion</span>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                    <input
+                        type="date"
+                        name="membershipPeriodStart"
+                        value={form.membershipPeriodStart}
+                        onChange={handleChange}
+                        className="rounded-xl border border-gray-200 p-2.5 text-sm"
+                    />
+                    <input
+                        type="date"
+                        name="membershipPeriodEnd"
+                        value={form.membershipPeriodEnd}
+                        onChange={handleChange}
+                        className="rounded-xl border border-gray-200 p-2.5 text-sm"
+                    />
+                </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-600">Date d'ouverture de la campagne</label>
-          <input
-            type="date"
-            value={form.campaignStart}
-            onChange={(e) => setForm({ ...form, campaignStart: e.target.value })}
-            className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#D6336C] focus:ring-1 focus:ring-[#D6336C]"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-semibold text-gray-600">Date de fermeture de la campagne</label>
-          <input
-            type="date"
-            value={form.campaignEnd}
-            onChange={(e) => setForm({ ...form, campaignEnd: e.target.value })}
-            className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#D6336C] focus:ring-1 focus:ring-[#D6336C]"
-          />
-        </div>
-      </div>
+                <span className="mt-6 block text-sm font-semibold text-gray-700">Montant annuel de cotisation</span>
+                <input
+                    type="number"
+                    name="annualContributionAmount"
+                    value={form.annualContributionAmount}
+                    onChange={handleChange}
+                    className="mt-3 w-full rounded-xl border border-gray-200 p-2.5 text-sm"
+                />
 
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="glow-pink flex items-center justify-center gap-2 self-start bg-[#D6336C] hover:bg-[#B36CB2] text-white font-semibold text-sm px-6 py-3 rounded-xl transition-colors disabled:opacity-60"
-      >
-        <Save size={16} /> {saving ? 'Enregistrement...' : saved ? 'Enregistré ✓' : 'Enregistrer les paramètres'}
-      </button>
-    </div>
-  )
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="mt-6 rounded-full bg-[#D6336C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                >
+                    {saving ? "Enregistrement..." : "Enregistrer"}
+                </button>
+            </div>
+        </div>
+    );
 }
-
-export default AdminSettings

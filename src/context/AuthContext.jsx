@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import { loginRequest } from '../services/api.js'
+import { authApi } from '../services/api.js'
 
 const AuthContext = createContext(null)
 
@@ -36,7 +36,7 @@ export function AuthProvider({ children }) {
 
   async function login(username, password) {
     try {
-      const { data } = await loginRequest(username.trim(), password)
+      const { data } = await authApi.login(username.trim(), password)
       localStorage.setItem('sg_token', data.token)
 
       const newSession = {

@@ -1,93 +1,140 @@
-import React from 'react'
-import { Wallet, TrendingUp } from 'lucide-react'
-import { useContributions, updateContribution, MONTHLY_FEE_AMOUNT } from '../../data/mockContributions.js'
-import { useMembers } from '../../data/mockMembers.js'
-import { Skeleton } from '../../Components/ui/skeleton.jsx'
+// Path: src/Pages/admin/AdminContributions.jsx
+import { useEffect, useState } from "react";
+import { contributionApi, userApi } from "@/services/api";
+import { Plus } from "lucide-react";
 
-function AdminContributions() {
-  const { data: contributions, loading: contribLoading } = useContributions()
-  const { data: members, loading: membersLoading } = useMembers()
-  const loading = contribLoading || membersLoading
+const currentYear = new Date().getFullYear();
 
-  if (loading) {
+export default function AdminContributions() {
+    const [year, setYear] = useState(currentYear);
+    const [data, setData] = useState({ totalCollected: 0, contributions: [] });
+    const [members, setMembers] = useState([]);
+    const [form, setForm] = useState({ userId: "", amount: "", method: "especes", note: "" });
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const [contribRes, usersRes] = await Promise.all([
+                contributionApi.getAll(year),
+                userApi.getAll(),
+            ]);
+            setData(contribRes.data);
+            setMembers(usersRes.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [year]);
+
+    const handleSubmit = async () => {
+        if (!form.userId || !form.amount) return;
+        try {
+            await contributionApi.create({ ...form, amount: Number(form.amount), year });
+            setForm({ userId: "", amount: "", method: "especes", note: "" });
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors de l'enregistrement.");
+        }
+    };
+
     return (
-      <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <Skeleton className="h-24 w-full rounded-2xl" />
-          <Skeleton className="h-24 w-full rounded-2xl" />
-        </div>
-        <Skeleton className="h-80 w-full rounded-2xl" />
-      </div>
-    )
-  }
+        <div className="p-6">
+            <div className="flex items-center justify-between">
+                <h1 className="font-fraunces text-2xl font-bold text-gray-800">Cotisations</h1>
+                <select
+                    value={year}
+                    onChange={(e) => setYear(Number(e.target.value))}
+                    className="rounded-full border border-gray-200 px-4 py-2 text-sm"
+                >
+                    {[currentYear, currentYear - 1, currentYear - 2].map((y) => (
+                        <option key={y} value={y}>
+                            {y}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
-  const totalCollected = contributions.filter((c) => c.status === 'Payé').reduce((sum, c) => sum + c.amount, 0)
-  const totalExpected = contributions.length * MONTHLY_FEE_AMOUNT * members.length
-  const progress = Math.round((totalCollected / (contributions.length * MONTHLY_FEE_AMOUNT * members.length || 1)) * 100)
+            <p className="mt-4 text-3xl font-bold text-[#D6336C]">
+                {data.totalCollected.toLocaleString("fr-FR")} FCFA
+                <span className="ml-2 text-sm font-normal text-gray-500">collectés en {year}</span>
+            </p>
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center gap-4">
-          <div className="h-11 w-11 rounded-xl bg-[#D6336C]/10 flex items-center justify-center">
-            <Wallet size={20} className="text-[#D6336C]" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-gray-400">Total collecté</p>
-            <h3 className="text-2xl font-bold text-gray-900">{totalCollected.toLocaleString()} FCFA</h3>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-2 justify-center">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-400 flex items-center gap-1.5"><TrendingUp size={14} /> Progression annuelle globale</span>
-            <span className="text-xs font-bold text-[#D6336C]">{progress}%</span>
-          </div>
-          <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-[#D6336C] to-[#B36CB2] rounded-full transition-all duration-700" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 overflow-x-auto">
-        <h3 className="font-bold text-gray-900 mb-4">Paiements des membres</h3>
-        <table className="w-full text-left border-collapse min-w-[520px]">
-          <thead>
-            <tr className="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase">
-              <th className="pb-3">Membre</th>
-              <th className="pb-3">Mois en cours</th>
-              <th className="pb-3">Statut</th>
-              <th className="pb-3 text-right">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {members.map((member) => {
-              // Simulation simple : on associe le dernier statut de la liste globale au membre
-              const status = contributions[contributions.length - 1]?.status ?? 'En attente'
-              return (
-                <tr key={member.id} className="border-b border-gray-50 text-sm">
-                  <td className="py-3 font-semibold text-gray-800">{member.firstName} {member.lastName}</td>
-                  <td className="py-3 text-gray-500">{contributions[contributions.length - 1]?.month}</td>
-                  <td className="py-3">
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${status === 'Payé' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-500'}`}>
-                      {status}
-                    </span>
-                  </td>
-                  <td className="py-3 text-right">
-                    <button
-                      onClick={() => updateContribution(contributions[contributions.length - 1]?.id, { status: 'Payé' })}
-                      className="text-xs font-semibold text-[#D6336C] hover:underline"
+            <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <span className="text-sm font-semibold text-gray-700">Enregistrer un paiement</span>
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-4">
+                    <select
+                        value={form.userId}
+                        onChange={(e) => setForm({ ...form, userId: e.target.value })}
+                        className="rounded-xl border border-gray-200 p-2.5 text-sm"
                     >
-                      Marquer payé
+                        <option value="">Membre...</option>
+                        {members.map((m) => (
+                            <option key={m._id} value={m._id}>
+                                {m.fullName} ({m.memberId})
+                            </option>
+                        ))}
+                    </select>
+                    <input
+                        type="number"
+                        placeholder="Montant"
+                        value={form.amount}
+                        onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                        className="rounded-xl border border-gray-200 p-2.5 text-sm"
+                    />
+                    <select
+                        value={form.method}
+                        onChange={(e) => setForm({ ...form, method: e.target.value })}
+                        className="rounded-xl border border-gray-200 p-2.5 text-sm"
+                    >
+                        <option value="especes">Espèces</option>
+                        <option value="mobile_money">Mobile Money</option>
+                        <option value="virement">Virement</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                    <button
+                        onClick={handleSubmit}
+                        className="flex items-center justify-center gap-1 rounded-xl bg-[#D6336C] p-2.5 text-sm font-semibold text-white hover:opacity-90"
+                    >
+                        <Plus className="size-4" /> Ajouter
                     </button>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
+                </div>
+            </div>
 
-export default AdminContributions
+            <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                        <tr>
+                            <th className="px-4 py-3">Membre</th>
+                            <th className="px-4 py-3">Montant</th>
+                            <th className="px-4 py-3">Méthode</th>
+                            <th className="px-4 py-3">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {!loading &&
+                            data.contributions.map((c) => (
+                                <tr key={c._id}>
+                                    <td className="px-4 py-3 font-medium text-gray-800">
+                                        {c.user?.fullName} ({c.user?.memberId})
+                                    </td>
+                                    <td className="px-4 py-3">{c.amount.toLocaleString("fr-FR")} FCFA</td>
+                                    <td className="px-4 py-3 capitalize text-gray-500">{c.method}</td>
+                                    <td className="px-4 py-3 text-gray-500">
+                                        {new Date(c.paidAt).toLocaleDateString("fr-FR")}
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}

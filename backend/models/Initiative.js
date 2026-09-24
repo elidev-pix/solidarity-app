@@ -1,4 +1,3 @@
-// Path: backend/models/Initiative.js
 import mongoose from "mongoose";
 
 const initiativeSchema = new mongoose.Schema(

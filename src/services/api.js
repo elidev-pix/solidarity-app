@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("sg_token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
@@ -18,8 +18,11 @@ export const authApi = {
 };
 
 export const userApi = {
-    create: (data) => api.post("/users/create", data),
+    create: (fullName, role) => api.post("/users/create", { fullName, role }),
     getAll: () => api.get("/users"),
+    resetPassword: (id) => api.put(`/users/${id}/reset-password`),
+    bulkCreate: (members) => api.post("/users/bulk-create", { members }),
+    updateMe: (fullName) => api.put("/users/me", { fullName }),
 };
 
 export const membershipRequestApi = {

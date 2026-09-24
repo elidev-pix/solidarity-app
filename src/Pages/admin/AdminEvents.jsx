@@ -1,83 +1,122 @@
-import React, { useState } from 'react'
-import { Plus, Pencil, Trash2, CalendarDays, MapPin, X } from 'lucide-react'
-import { useEvents, addEvent, removeEvent } from '../../data/mockEvents.js'
-import { Skeleton } from '../../Components/ui/skeleton.jsx'
+// Path: src/Pages/admin/AdminEvents.jsx
+import { useEffect, useState } from "react";
+import { eventApi } from "@/services/api";
+import EventFormModal from "@/Components/admin/EventFormModal";
+import EventParticipantsModal from "@/Components/admin/EventParticipantsModal";
+import { Plus, Trash2, Pencil, Users } from "lucide-react";
 
-const inputClass = 'w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#D6336C] focus:ring-1 focus:ring-[#D6336C] transition-colors'
+const statusStyles = {
+    upcoming: "bg-blue-50 text-blue-700",
+    ongoing: "bg-green-50 text-green-700",
+    completed: "bg-gray-100 text-gray-600",
+    cancelled: "bg-red-50 text-red-700",
+};
 
-function AdminEvents() {
-  const { data: events, loading } = useEvents()
-  const [showForm, setShowForm] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [form, setForm] = useState({ title: '', description: '', date: '', time: '', place: '', image: '/don1.jpg' })
+export default function AdminEvents() {
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [formOpen, setFormOpen] = useState(false);
+    const [participantsOpen, setParticipantsOpen] = useState(false);
+    const [selected, setSelected] = useState(null);
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setSubmitting(true)
-    await addEvent({ id: `EVT-${Date.now()}`, ...form })
-    setForm({ title: '', description: '', date: '', time: '', place: '', image: '/don1.jpg' })
-    setSubmitting(false)
-    setShowForm(false)
-  }
+    const fetchEvents = async () => {
+        setLoading(true);
+        try {
+            const { data } = await eventApi.getAll();
+            setEvents(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <div className="flex flex-col gap-6">
-      <div className="flex justify-end">
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="glow-pink flex items-center gap-2 bg-[#D6336C] hover:bg-[#B36CB2] text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
-        >
-          {showForm ? <X size={16} /> : <Plus size={16} />}
-          {showForm ? 'Annuler' : 'Créer un événement'}
-        </button>
-      </div>
+    useEffect(() => {
+        fetchEvents();
+    }, []);
 
-      {showForm && (
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input required placeholder="Titre" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className={`${inputClass} sm:col-span-2`} />
-          <textarea required placeholder="Description" rows="2" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className={`${inputClass} sm:col-span-2 resize-none`} />
-          <input required type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className={inputClass} />
-          <input required type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} className={inputClass} />
-          <input required placeholder="Lieu" value={form.place} onChange={(e) => setForm({ ...form, place: e.target.value })} className={`${inputClass} sm:col-span-2`} />
-          <button type="submit" disabled={submitting} className="sm:col-span-2 bg-[#D6336C] hover:bg-[#B36CB2] text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-60">
-            {submitting ? 'Création...' : "Créer l'événement"}
-          </button>
-        </form>
-      )}
+    const handleDelete = async (id) => {
+        if (!window.confirm("Supprimer cet événement ?")) return;
+        try {
+            await eventApi.remove(id);
+            fetchEvents();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {loading ? (
-          Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-64 w-full rounded-2xl" />)
-        ) : (
-          events.map((event) => (
-            <div key={event.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col">
-              <img src={event.image} alt={event.title} className="h-32 w-full object-cover" />
-              <div className="p-4 flex flex-col gap-2 flex-1">
-                <h4 className="font-bold text-gray-900">{event.title}</h4>
-                <div className="flex items-center gap-1.5 text-xs text-[#B36CB2] font-semibold">
-                  <CalendarDays size={14} /> {new Date(event.date).toLocaleDateString('fr-FR')} · {event.time}
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-[#B36CB2] font-semibold">
-                  <MapPin size={14} /> {event.place}
-                </div>
-                <div className="flex gap-2 mt-auto pt-2">
-                  <button className="flex-1 flex items-center justify-center gap-1 text-xs font-semibold bg-gray-50 hover:bg-gray-100 text-gray-600 py-2 rounded-lg transition-colors">
-                    <Pencil size={13} /> Modifier
-                  </button>
-                  <button
-                    onClick={() => removeEvent(event.id)}
-                    className="flex-1 flex items-center justify-center gap-1 text-xs font-semibold bg-red-50 hover:bg-red-100 text-red-500 py-2 rounded-lg transition-colors"
-                  >
-                    <Trash2 size={13} /> Supprimer
-                  </button>
-                </div>
-              </div>
+    return (
+        <div className="p-6">
+            <div className="flex items-center justify-between">
+                <h1 className="font-fraunces text-2xl font-bold text-gray-800">Événements</h1>
+                <button
+                    onClick={() => {
+                        setSelected(null);
+                        setFormOpen(true);
+                    }}
+                    className="flex items-center gap-2 rounded-full bg-[#D6336C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                >
+                    <Plus className="size-4" /> Nouvel événement
+                </button>
             </div>
-          ))
-        )}
-      </div>
-    </div>
-  )
-}
 
-export default AdminEvents
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {!loading &&
+                    events.map((ev) => (
+                        <div key={ev._id} className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                            <div className="flex items-start justify-between">
+                                <span className="font-fraunces text-lg font-bold text-gray-800">{ev.title}</span>
+                                <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusStyles[ev.status]}`}>
+                                    {ev.status}
+                                </span>
+                            </div>
+                            <p className="mt-1 text-xs text-gray-500">
+                                {new Date(ev.startDate).toLocaleString("fr-FR")}
+                            </p>
+                            {ev.location && <p className="mt-1 text-xs text-gray-400">{ev.location}</p>}
+                            <p className="mt-2 line-clamp-2 text-sm text-gray-600">{ev.description}</p>
+
+                            <div className="mt-4 flex gap-2">
+                                <button
+                                    onClick={() => {
+                                        setSelected(ev);
+                                        setParticipantsOpen(true);
+                                    }}
+                                    className="flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50"
+                                >
+                                    <Users className="size-3.5" /> Participants
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setSelected(ev);
+                                        setFormOpen(true);
+                                    }}
+                                    className="rounded-full border border-gray-200 p-1.5 text-gray-600 hover:bg-gray-50"
+                                >
+                                    <Pencil className="size-3.5" />
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(ev._id)}
+                                    className="rounded-full border border-gray-200 p-1.5 text-red-600 hover:bg-red-50"
+                                >
+                                    <Trash2 className="size-3.5" />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+            </div>
+
+            <EventFormModal
+                open={formOpen}
+                onClose={() => setFormOpen(false)}
+                onDone={fetchEvents}
+                event={selected}
+            />
+            <EventParticipantsModal
+                open={participantsOpen}
+                onClose={() => setParticipantsOpen(false)}
+                event={selected}
+            />
+        </div>
+    );
+}

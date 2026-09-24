@@ -1,105 +1,112 @@
-import React, { useState } from 'react'
-import { Eye, Pencil, Trash2, Search } from 'lucide-react'
-import { useMembers, removeMember } from '../../data/mockMembers.js'
-import { Skeleton } from '../../Components/ui/skeleton.jsx'
+// Path: src/Pages/admin/AdminMembers.jsx
+import { useEffect, useState } from "react";
+import { userApi } from "@/services/api";
+import MemberDetailModal from "@/Components/admin/MemberDetailModal";
+import BulkImportModal from "@/Components/admin/BulkImportModal";
+import CredentialsModal from "@/Components/admin/CredentialsModal";
+import { UserPlus, Upload } from "lucide-react";
 
-function StatusBadge({ status }) {
-  const isActive = status === 'Actif'
-  return (
-    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${isActive ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-500'}`}>
-      {status}
-    </span>
-  )
-}
+export default function AdminMembers() {
+    const [members, setMembers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState(null);
+    const [detailOpen, setDetailOpen] = useState(false);
+    const [importOpen, setImportOpen] = useState(false);
+    const [credentials, setCredentials] = useState(null);
+    const [credModalOpen, setCredModalOpen] = useState(false);
 
-function AdminMembers() {
-  const { data: members, loading } = useMembers()
-  const [search, setSearch] = useState('')
-  const [deletingId, setDeletingId] = useState(null)
+    const fetchMembers = async () => {
+        setLoading(true);
+        try {
+            const { data } = await userApi.getAll();
+            setMembers(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  async function handleDelete(id) {
-    setDeletingId(id)
-    await removeMember(id)
-    setDeletingId(null)
-  }
+    useEffect(() => {
+        fetchMembers();
+    }, []);
 
-  const filtered = members?.filter((m) =>
-    `${m.firstName} ${m.lastName}`.toLowerCase().includes(search.toLowerCase())
-  )
+    const handleAdd = async () => {
+        const fullName = window.prompt("Nom complet du nouveau membre :");
+        if (!fullName) return;
+        try {
+            const { data } = await userApi.create(fullName, "member");
+            setCredentials(data.credentials);
+            setCredModalOpen(true);
+            fetchMembers();
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors de la création.");
+        }
+    };
 
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-6">
-      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-        <h3 className="font-bold text-gray-900">Liste des membres</h3>
-        <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un membre..."
-            className="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-[#D6336C] focus:ring-1 focus:ring-[#D6336C] transition-colors"
-          />
+    return (
+        <div className="p-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="font-fraunces text-2xl font-bold text-gray-800">Membres</h1>
+                    <p className="mt-1 text-sm text-gray-500">{members.length} membre(s)</p>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setImportOpen(true)}
+                        className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50"
+                    >
+                        <Upload className="size-4" /> Import
+                    </button>
+                    <button
+                        onClick={handleAdd}
+                        className="flex items-center gap-2 rounded-full bg-[#D6336C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                    >
+                        <UserPlus className="size-4" /> Ajouter
+                    </button>
+                </div>
+            </div>
+
+            <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                        <tr>
+                            <th className="px-4 py-3">Nom</th>
+                            <th className="px-4 py-3">Identifiant</th>
+                            <th className="px-4 py-3">Statut</th>
+                            <th className="px-4 py-3">Inscrit le</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {!loading &&
+                            members.map((m) => (
+                                <tr
+                                    key={m._id}
+                                    onClick={() => {
+                                        setSelected(m);
+                                        setDetailOpen(true);
+                                    }}
+                                    className="cursor-pointer hover:bg-gray-50"
+                                >
+                                    <td className="px-4 py-3 font-medium text-gray-800">{m.fullName}</td>
+                                    <td className="px-4 py-3 font-mono text-gray-600">{m.memberId}</td>
+                                    <td className="px-4 py-3 text-gray-500">
+                                        {m.isFirstLogin ? "Jamais connecté" : "Actif"}
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-500">
+                                        {new Date(m.createdAt).toLocaleDateString("fr-FR")}
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </table>
+                {loading && <p className="p-4 text-sm text-gray-500">Chargement...</p>}
+            </div>
+
+            <MemberDetailModal open={detailOpen} onClose={() => setDetailOpen(false)} member={selected} />
+            <BulkImportModal open={importOpen} onClose={() => setImportOpen(false)} onDone={fetchMembers} />
+            <CredentialsModal open={credModalOpen} onClose={() => setCredModalOpen(false)} credentials={credentials} />
         </div>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[640px]">
-          <thead>
-            <tr className="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase">
-              <th className="pb-3">Membre</th>
-              <th className="pb-3">Téléphone</th>
-              <th className="pb-3">N° membre</th>
-              <th className="pb-3">Statut</th>
-              <th className="pb-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <tr key={i} className="border-b border-gray-50">
-                  <td className="py-4"><div className="flex items-center gap-3"><Skeleton className="h-9 w-9 rounded-full" /><Skeleton className="h-4 w-24" /></div></td>
-                  <td className="py-4"><Skeleton className="h-4 w-28" /></td>
-                  <td className="py-4"><Skeleton className="h-4 w-20" /></td>
-                  <td className="py-4"><Skeleton className="h-5 w-16 rounded-full" /></td>
-                  <td className="py-4"><Skeleton className="h-4 w-16 ml-auto" /></td>
-                </tr>
-              ))
-            ) : (
-              filtered.map((member) => (
-                <tr key={member.id} className="border-b border-gray-50 text-sm hover:bg-gray-50/50 transition-colors">
-                  <td className="py-4">
-                    <div className="flex items-center gap-3">
-                      <img src={member.photo} alt={member.firstName} className="h-9 w-9 rounded-full object-cover" />
-                      <span className="font-semibold text-gray-800">{member.firstName} {member.lastName}</span>
-                    </div>
-                  </td>
-                  <td className="py-4 text-gray-500">{member.phone}</td>
-                  <td className="py-4 text-gray-500">{member.id}</td>
-                  <td className="py-4"><StatusBadge status={member.status} /></td>
-                  <td className="py-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="text-gray-400 hover:text-[#B36CB2] transition-colors"><Eye size={16} /></button>
-                      <button className="text-gray-400 hover:text-[#D6336C] transition-colors"><Pencil size={16} /></button>
-                      <button
-                        onClick={() => handleDelete(member.id)}
-                        disabled={deletingId === member.id}
-                        className="text-gray-400 hover:text-red-500 transition-colors disabled:opacity-40"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-        {!loading && filtered.length === 0 && (
-          <p className="text-center text-sm text-gray-400 py-8">Aucun membre trouvé.</p>
-        )}
-      </div>
-    </div>
-  )
+    );
 }
-
-export default AdminMembers

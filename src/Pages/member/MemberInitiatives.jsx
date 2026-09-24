@@ -1,105 +1,94 @@
-import React, { useState } from 'react'
-import { Lightbulb, Send } from 'lucide-react'
-import { useInitiatives, addInitiative } from '../../data/mockInitiatives.js'
-import { useAuth } from '../../context/AuthContext.jsx'
-import { Skeleton } from '../../Components/ui/skeleton.jsx'
-import ScrollReveal from '../../Components/ScrollReveal.jsx'
+// Path: src/Pages/member/MemberInitiatives.jsx
+import { useEffect, useState } from "react";
+import { initiativeApi } from "@/services/api";
+import { Plus } from "lucide-react";
 
-const inputClass =
-  'w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#D6336C] focus:ring-1 focus:ring-[#D6336C] transition-colors'
+const statusStyles = {
+    pending: "bg-yellow-50 text-yellow-700",
+    approved: "bg-green-50 text-green-700",
+    rejected: "bg-red-50 text-red-700",
+};
 
-function StatusBadge({ status }) {
-  const styles = {
-    'En attente': 'bg-orange-50 text-orange-500',
-    'Acceptée': 'bg-green-50 text-green-600',
-    'Refusée': 'bg-red-50 text-red-500',
-  }
-  return <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${styles[status]}`}>{status}</span>
-}
+const statusLabels = { pending: "En attente", approved: "Approuvée", rejected: "Rejetée" };
 
-function MemberInitiatives() {
-  const { session } = useAuth()
-  const { data: initiatives, loading } = useInitiatives()
-  const [form, setForm] = useState({ title: '', description: '', objective: '' })
-  const [submitting, setSubmitting] = useState(false)
+export default function MemberInitiatives() {
+    const [initiatives, setInitiatives] = useState([]);
+    const [form, setForm] = useState({ title: "", description: "" });
+    const [loading, setLoading] = useState(true);
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setSubmitting(true)
-    await addInitiative({
-      id: `INIT-${Date.now()}`,
-      author: `${session?.user?.firstName} ${session?.user?.lastName}`,
-      ...form,
-      status: 'En attente',
-    })
-    setForm({ title: '', description: '', objective: '' })
-    setSubmitting(false)
-  }
+    const fetchInitiatives = async () => {
+        setLoading(true);
+        try {
+            const { data } = await initiativeApi.getMine();
+            setInitiatives(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  return (
-    <div className="flex flex-col gap-8">
-      {/* Formulaire de proposition */}
-      <div className="glow-pink bg-white rounded-2xl border border-gray-100 p-6">
-        <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Lightbulb size={18} className="text-[#D6336C]" /> Proposer une initiative
-        </h3>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            required
-            placeholder="Titre de l'initiative"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            className={inputClass}
-          />
-          <textarea
-            required
-            rows="3"
-            placeholder="Décrivez votre idée..."
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className={`${inputClass} resize-none`}
-          />
-          <input
-            required
-            placeholder="Objectif visé (ex : sensibiliser 100 personnes)"
-            value={form.objective}
-            onChange={(e) => setForm({ ...form, objective: e.target.value })}
-            className={inputClass}
-          />
-          <button
-            type="submit"
-            disabled={submitting}
-            className="self-start flex items-center gap-2 bg-[#D6336C] hover:bg-[#B36CB2] text-white font-semibold text-sm px-6 py-3 rounded-xl transition-colors disabled:opacity-60"
-          >
-            {submitting ? 'Envoi...' : (<>Soumettre <Send size={16} /></>)}
-          </button>
-        </form>
-      </div>
+    useEffect(() => {
+        fetchInitiatives();
+    }, []);
 
-      {/* Liste des initiatives déjà proposées */}
-      <div className="flex flex-col gap-4">
-        <h3 className="font-bold text-gray-900">Mes initiatives proposées</h3>
-        {loading ? (
-          Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-2xl" />)
-        ) : initiatives.length === 0 ? (
-          <p className="text-sm text-gray-400">Vous n'avez encore proposé aucune initiative.</p>
-        ) : (
-          initiatives.map((init, index) => (
-            <ScrollReveal key={init.id} delay={index * 80}>
-              <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-gray-900">{init.title}</h4>
-                  <StatusBadge status={init.status} />
+    const handleSubmit = async () => {
+        if (!form.title || !form.description) return;
+        try {
+            await initiativeApi.create(form);
+            setForm({ title: "", description: "" });
+            fetchInitiatives();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return (
+        <div className="p-6">
+            <h1 className="font-fraunces text-2xl font-bold text-gray-800">Mes initiatives</h1>
+
+            <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <span className="text-sm font-semibold text-gray-700">Proposer une initiative</span>
+                <div className="mt-3 space-y-3">
+                    <input
+                        value={form.title}
+                        onChange={(e) => setForm({ ...form, title: e.target.value })}
+                        placeholder="Titre"
+                        className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
+                    />
+                    <textarea
+                        value={form.description}
+                        onChange={(e) => setForm({ ...form, description: e.target.value })}
+                        placeholder="Description"
+                        rows={3}
+                        className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
+                    />
+                    <button
+                        onClick={handleSubmit}
+                        className="flex items-center gap-2 rounded-full bg-[#D6336C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+                    >
+                        <Plus className="size-4" /> Proposer
+                    </button>
                 </div>
-                <p className="text-sm text-gray-500">{init.description}</p>
-                <p className="text-xs text-gray-400">Objectif : {init.objective}</p>
-              </div>
-            </ScrollReveal>
-          ))
-        )}
-      </div>
-    </div>
-  )
-}
+            </div>
 
-export default MemberInitiatives
+            <div className="mt-6 space-y-3">
+                {!loading &&
+                    initiatives.map((init) => (
+                        <div key={init._id} className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                            <div className="flex items-start justify-between">
+                                <span className="font-fraunces text-lg font-bold text-gray-800">{init.title}</span>
+                                <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[init.status]}`}>
+                                    {statusLabels[init.status]}
+                                </span>
+                            </div>
+                            <p className="mt-2 text-sm text-gray-600">{init.description}</p>
+                            {init.status === "rejected" && init.rejectionReason && (
+                                <p className="mt-2 text-xs text-red-500">Motif : {init.rejectionReason}</p>
+                            )}
+                        </div>
+                    ))}
+            </div>
+        </div>
+    );
+}

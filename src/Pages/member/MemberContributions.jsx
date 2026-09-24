@@ -1,105 +1,79 @@
-import React from 'react'
-import { Wallet, TrendingUp } from 'lucide-react'
-import { useContributions, MONTHLY_FEE_AMOUNT } from '../../data/mockContributions.js'
-import { Skeleton } from '../../Components/ui/skeleton.jsx'
+// Path: src/Pages/member/MemberContributions.jsx
+import { useEffect, useState } from "react";
+import { contributionApi } from "@/services/api";
 
-function StatusBadge({ status }) {
-  const isPaid = status === 'Payé'
-  return (
-    <span
-      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-        isPaid ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-500'
-      }`}
-    >
-      {status}
-    </span>
-  )
-}
+const currentYear = new Date().getFullYear();
 
-function MemberContributions() {
-  const { data: contributions, loading } = useContributions()
+export default function MemberContributions() {
+    const [data, setData] = useState(null);
 
-  if (loading) {
+    useEffect(() => {
+        contributionApi.getMine(currentYear).then(({ data }) => setData(data)).catch(console.error);
+    }, []);
+
+    if (!data) return <div className="p-6 text-sm text-gray-500">Chargement...</div>;
+
     return (
-      <div className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-2xl" />
-          ))}
-        </div>
-        <Skeleton className="h-96 w-full rounded-2xl" />
-      </div>
-    )
-  }
+        <div className="p-6">
+            <h1 className="font-fraunces text-2xl font-bold text-gray-800">Mes cotisations</h1>
+            <p className="mt-1 text-sm text-gray-500">Année {data.year}</p>
 
-  const paidMonths = contributions.filter((c) => c.status === 'Payé')
-  const totalPaid = paidMonths.length * MONTHLY_FEE_AMOUNT
-  const totalDue = contributions.length * MONTHLY_FEE_AMOUNT
-  const remaining = totalDue - totalPaid
-  const progress = Math.round((paidMonths.length / contributions.length) * 100)
+            <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                <div className="flex items-end justify-between">
+                    <div>
+                        <p className="text-3xl font-bold text-[#D6336C]">
+                            {data.totalPaid.toLocaleString("fr-FR")} FCFA
+                        </p>
+                        <p className="text-sm text-gray-500">
+                            sur {data.annualAmount.toLocaleString("fr-FR")} FCFA
+                        </p>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-600">
+                        Restant : {data.remaining.toLocaleString("fr-FR")} FCFA
+                    </p>
+                </div>
 
-  return (
-    <div className="flex flex-col gap-6">
-      {/* Résumé */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center gap-4">
-          <div className="h-11 w-11 rounded-xl bg-green-50 flex items-center justify-center">
-            <Wallet size={20} className="text-green-600" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-gray-400">Total payé</p>
-            <h3 className="text-xl font-bold text-gray-900">{totalPaid.toLocaleString()} FCFA</h3>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center gap-4">
-          <div className="h-11 w-11 rounded-xl bg-orange-50 flex items-center justify-center">
-            <Wallet size={20} className="text-orange-500" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-gray-400">Restant dû</p>
-            <h3 className="text-xl font-bold text-gray-900">{remaining.toLocaleString()} FCFA</h3>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
-              <TrendingUp size={14} /> Progression annuelle
-            </span>
-            <span className="text-xs font-bold text-[#D6336C]">{progress}%</span>
-          </div>
-          <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-[#D6336C] to-[#B36CB2] rounded-full transition-all duration-700"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        </div>
-      </div>
+                <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div
+                        className="h-full rounded-full bg-[#D6336C] transition-all"
+                        style={{ width: `${data.progress}%` }}
+                    />
+                </div>
+                <p className="mt-1 text-right text-xs text-gray-400">{Math.round(data.progress)}%</p>
+            </div>
 
-      {/* Tableau */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 overflow-x-auto">
-        <h3 className="font-bold text-gray-900 mb-4">Historique des cotisations</h3>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-gray-100 text-xs font-semibold text-gray-400 uppercase">
-              <th className="pb-3">Mois</th>
-              <th className="pb-3">Montant</th>
-              <th className="pb-3">Statut</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contributions.map((c) => (
-              <tr key={c.id} className="border-b border-gray-50 text-sm">
-                <td className="py-3 font-semibold text-gray-800">{c.month}</td>
-                <td className="py-3 text-gray-500">{c.amount.toLocaleString()} FCFA</td>
-                <td className="py-3"><StatusBadge status={c.status} /></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
+            <h2 className="mt-8 text-sm font-semibold uppercase tracking-wide text-gray-500">Historique</h2>
+            <div className="mt-3 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <table className="w-full text-left text-sm">
+                    <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+                        <tr>
+                            <th className="px-4 py-3">Montant</th>
+                            <th className="px-4 py-3">Méthode</th>
+                            <th className="px-4 py-3">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {data.history.map((c) => (
+                            <tr key={c._id}>
+                                <td className="px-4 py-3 font-medium text-gray-800">
+                                    {c.amount.toLocaleString("fr-FR")} FCFA
+                                </td>
+                                <td className="px-4 py-3 capitalize text-gray-500">{c.method}</td>
+                                <td className="px-4 py-3 text-gray-500">
+                                    {new Date(c.paidAt).toLocaleDateString("fr-FR")}
+                                </td>
+                            </tr>
+                        ))}
+                        {data.history.length === 0 && (
+                            <tr>
+                                <td colSpan={3} className="px-4 py-3 text-gray-400">
+                                    Aucun paiement enregistré.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }
-
-export default MemberContributions

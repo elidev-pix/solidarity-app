@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { LockKeyhole, LogOut, Save } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { changePasswordRequest } from '../services/api.js'
+import { authApi } from '../services/api.js'
 import { useAuth } from '../context/AuthContext.jsx'
 
 function ChangePassword() {
@@ -24,7 +24,7 @@ function ChangePassword() {
 
     setSubmitting(true)
     try {
-      await changePasswordRequest(oldPassword, newPassword)
+      await authApi.changePassword(oldPassword, newPassword)
       markPasswordChanged()
       navigate(session.role === 'admin' ? '/admin' : '/member', { replace: true })
     } catch (requestError) {
