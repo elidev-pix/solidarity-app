@@ -39,6 +39,14 @@ export const newsApi = {
     remove: (id) => api.delete(`/news/${id}`),
 };
 
+export const uploadApi = {
+    image: (file) => {
+        const formData = new FormData();
+        formData.append("image", file);
+        return api.post("/uploads/image", formData);
+    },
+};
+
 export const eventApi = {
     create: (data) => api.post("/events", data),
     getAll: () => api.get("/events"),

@@ -1,6 +1,6 @@
 // Path: src/Components/admin/EventFormModal.jsx
 import { useEffect, useState } from "react";
-import { eventApi } from "@/services/api";
+import { eventApi, uploadApi } from "@/services/api";
 import { X } from "lucide-react";
 
 const empty = { title: "", description: "", location: "", startDate: "", endDate: "", status: "upcoming", imageUrl: "" };
@@ -8,6 +8,7 @@ const empty = { title: "", description: "", location: "", startDate: "", endDate
 export default function EventFormModal({ open, onClose, onDone, event }) {
     const [form, setForm] = useState(empty);
     const [loading, setLoading] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     useEffect(() => {
         if (event) {
@@ -28,6 +29,32 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
     if (!open) return null;
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+            alert("Formats autorisés : JPEG, PNG ou WebP.");
+            e.target.value = "";
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            alert("L’image ne doit pas dépasser 5 Mo.");
+            e.target.value = "";
+            return;
+        }
+        setUploadingImage(true);
+        try {
+            const { data } = await uploadApi.image(file);
+            setForm((current) => ({ ...current, imageUrl: data.imageUrl }));
+        } catch (error) {
+            console.error(error);
+            alert(error?.response?.data?.message || "Échec de l’envoi de l’image.");
+        } finally {
+            setUploadingImage(false);
+            e.target.value = "";
+        }
+    };
 
     const handleSubmit = async () => {
         if (!form.title || !form.startDate) return;
@@ -82,14 +109,27 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
                         placeholder="Lieu"
                         className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
                     />
-                    <input
-                        type="url"
-                        name="imageUrl"
-                        value={form.imageUrl}
-                        onChange={handleChange}
-                        placeholder="URL de l’image (Appwrite)"
-                        className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
-                    />
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">Photo de l’événement (JPEG, PNG ou WebP — 5 Mo max.)</label>
+                        <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={handleImageUpload}
+                            disabled={uploadingImage || loading}
+                            className="w-full rounded-xl border border-gray-200 p-3 text-sm file:mr-3 file:rounded-full file:border-0 file:bg-pink-50 file:px-3 file:py-1.5 file:font-semibold file:text-[#D6336C]"
+                        />
+                        {uploadingImage && <p className="text-xs text-gray-500">Envoi vers Appwrite…</p>}
+                        {form.imageUrl && <img src={form.imageUrl} alt="Aperçu de l’événement" className="h-36 w-full rounded-xl object-cover" />}
+                        <label className="block text-xs text-gray-500">Ou coller une URL d’image existante</label>
+                        <input
+                            type="url"
+                            name="imageUrl"
+                            value={form.imageUrl}
+                            onChange={handleChange}
+                            placeholder="https://…"
+                            className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
+                        />
+                    </div>
                     <div className="grid grid-cols-2 gap-3">
                         <input
                             type="datetime-local"
@@ -123,7 +163,7 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
 
                 <button
                     onClick={handleSubmit}
-                    disabled={loading}
+                    disabled={loading || uploadingImage}
                     className="mt-6 w-full rounded-full bg-[#D6336C] py-2.5 font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
                 >
                     {loading ? "Enregistrement..." : "Enregistrer"}

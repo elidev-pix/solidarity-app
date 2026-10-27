@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { newsApi } from "@/services/api";
+import { newsApi, uploadApi } from "@/services/api";
 import { Plus, Pencil, Trash2, X, Save, Newspaper } from "lucide-react";
 
 const blank = { title: "", summary: "", content: "", category: "Humanitaire", imageUrl: "", isPublished: true };
@@ -12,6 +12,7 @@ export default function AdminNews() {
   const [form, setForm] = useState(blank);
   const [error, setError] = useState("");
   const [formOpen, setFormOpen] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -37,6 +38,22 @@ export default function AdminNews() {
   function change(e) {
     const { name, value, type, checked } = e.target;
     setForm((current) => ({ ...current, [name]: type === "checkbox" ? checked : value }));
+  }
+  async function uploadNewsImage(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      setError("Choisissez une image JPEG, PNG ou WebP de 5 Mo maximum.");
+      e.target.value = "";
+      return;
+    }
+    setUploadingImage(true); setError("");
+    try {
+      const { data } = await uploadApi.image(file);
+      setForm((current) => ({ ...current, imageUrl: data.imageUrl }));
+    } catch (e) {
+      setError(e.response?.data?.message || "Échec de l’envoi de l’image.");
+    } finally { setUploadingImage(false); e.target.value = ""; }
   }
   async function submit(e) {
     e.preventDefault(); setSaving(true); setError("");
@@ -73,7 +90,7 @@ export default function AdminNews() {
         ))}
         {!loading && !items.length && <p className="text-sm text-gray-500">Aucune actualité pour le moment.</p>}
       </div>
-      {formOpen && <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/50 p-4"><form onSubmit={submit} className="my-8 w-full max-w-2xl rounded-3xl bg-white p-6 shadow-xl"><div className="flex items-center justify-between"><h2 className="font-fraunces text-xl font-bold">{editing ? "Modifier l’actualité" : "Créer une actualité"}</h2><button type="button" onClick={() => setFormOpen(false)} aria-label="Fermer"><X/></button></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><label className="space-y-1 text-sm font-medium sm:col-span-2">Titre *<input name="title" required maxLength={180} value={form.title} onChange={change} className={inputClass}/></label><label className="space-y-1 text-sm font-medium">Catégorie<input name="category" value={form.category} onChange={change} className={inputClass}/></label><label className="space-y-1 text-sm font-medium">URL de l’image (HTTP/HTTPS)<input name="imageUrl" type="url" value={form.imageUrl} onChange={change} className={inputClass} placeholder="https://…"/></label><label className="space-y-1 text-sm font-medium sm:col-span-2">Résumé<textarea name="summary" rows={2} maxLength={500} value={form.summary} onChange={change} className={inputClass}/></label><label className="space-y-1 text-sm font-medium sm:col-span-2">Contenu détaillé<textarea name="content" rows={5} value={form.content} onChange={change} className={inputClass}/></label><label className="flex items-center gap-2 text-sm sm:col-span-2"><input type="checkbox" name="isPublished" checked={form.isPublished} onChange={change}/> Publier immédiatement</label></div>{error && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}<div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setFormOpen(false)} className="rounded-full border px-4 py-2 text-sm">Annuler</button><button disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-[#D6336C] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"><Save size={15}/>{saving ? "Enregistrement…" : "Enregistrer"}</button></div></form></div>}
+      {formOpen && <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/50 p-4"><form onSubmit={submit} className="my-8 w-full max-w-2xl rounded-3xl bg-white p-6 shadow-xl"><div className="flex items-center justify-between"><h2 className="font-fraunces text-xl font-bold">{editing ? "Modifier l’actualité" : "Créer une actualité"}</h2><button type="button" onClick={() => setFormOpen(false)} aria-label="Fermer"><X/></button></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><label className="space-y-1 text-sm font-medium sm:col-span-2">Titre *<input name="title" required maxLength={180} value={form.title} onChange={change} className={inputClass}/></label><label className="space-y-1 text-sm font-medium">Catégorie<input name="category" value={form.category} onChange={change} className={inputClass}/></label><div className="space-y-2 text-sm font-medium">URL de l’image (HTTP/HTTPS)<input name="imageUrl" type="url" value={form.imageUrl} onChange={change} className={inputClass} placeholder="https://…"/><label className="block text-xs text-gray-500">Ou importer une image (JPEG, PNG ou WebP, 5 Mo max.)</label><input aria-label="Importer une image depuis votre appareil" type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadNewsImage} disabled={uploadingImage || saving} className={inputClass}/>{uploadingImage && <span className="block text-xs text-gray-500">Envoi vers Appwrite…</span>}{form.imageUrl && <img src={form.imageUrl} alt="Aperçu de l’actualité" className="h-28 w-full rounded-lg object-cover"/>}</div><label className="space-y-1 text-sm font-medium sm:col-span-2">Résumé<textarea name="summary" rows={2} maxLength={500} value={form.summary} onChange={change} className={inputClass}/></label><label className="space-y-1 text-sm font-medium sm:col-span-2">Contenu détaillé<textarea name="content" rows={5} value={form.content} onChange={change} className={inputClass}/></label><label className="flex items-center gap-2 text-sm sm:col-span-2"><input type="checkbox" name="isPublished" checked={form.isPublished} onChange={change}/> Publier immédiatement</label></div>{error && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}<div className="mt-6 flex justify-end gap-3"><button type="button" onClick={() => setFormOpen(false)} className="rounded-full border px-4 py-2 text-sm">Annuler</button><button disabled={saving || uploadingImage} className="inline-flex items-center gap-2 rounded-full bg-[#D6336C] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"><Save size={15}/>{saving ? "Enregistrement…" : "Enregistrer"}</button></div></form></div>}
     </div>
   );
 }
