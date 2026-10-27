@@ -21,7 +21,7 @@ export const userApi = {
     archive: (id) => api.delete(`/users/${id}`),
     resetPassword: (id) => api.put(`/users/${id}/reset-password`),
     bulkCreate: (members) => api.post("/users/bulk-create", { members }),
-    updateMe: (fullName) => api.put("/users/me", { fullName }),
+    updateMe: (data) => api.put("/users/me", data),
 };
 
 export const membershipRequestApi = {

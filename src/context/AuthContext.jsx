@@ -64,6 +64,13 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('sg_token')
   }
 
+  function updateSessionUser(userUpdates) {
+    setSession((current) => current && ({
+      ...current,
+      user: { ...current.user, ...userUpdates },
+    }))
+  }
+
   function markPasswordChanged() {
     setSession((current) => current && {
       ...current,
@@ -73,7 +80,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ session, authLoading, login, logout, markPasswordChanged }}>
+    <AuthContext.Provider value={{ session, authLoading, login, logout, markPasswordChanged, updateSessionUser }}>
       {children}
     </AuthContext.Provider>
   )
