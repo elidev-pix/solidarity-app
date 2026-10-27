@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { eventApi } from "@/services/api";
 import { X } from "lucide-react";
 
-const empty = { title: "", description: "", location: "", startDate: "", endDate: "", status: "upcoming" };
+const empty = { title: "", description: "", location: "", startDate: "", endDate: "", status: "upcoming", imageUrl: "" };
 
 export default function EventFormModal({ open, onClose, onDone, event }) {
     const [form, setForm] = useState(empty);
@@ -17,7 +17,7 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
                 location: event.location || "",
                 startDate: event.startDate ? event.startDate.slice(0, 16) : "",
                 endDate: event.endDate ? event.endDate.slice(0, 16) : "",
-                status: event.status || "upcoming",
+                status: event.status || "upcoming",\n                imageUrl: event.imageUrl || "",
             });
         } else {
             setForm(empty);
@@ -81,7 +81,7 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
                         placeholder="Lieu"
                         className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
                     />
-                    <div className="grid grid-cols-2 gap-3">
+                    <input\n                        type="url"\n                        name="imageUrl"\n                        value={form.imageUrl}\n                        onChange={handleChange}\n                        placeholder="URL de l’image (Appwrite)"\n                        className="w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"\n                    />\n                    <div className="grid grid-cols-2 gap-3">
                         <input
                             type="datetime-local"
                             name="startDate"
