@@ -45,7 +45,7 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
         }
         setUploadingImage(true);
         try {
-            const { data } = await uploadApi.eventImage(file);
+            const { data } = await uploadApi.image(file);
             setForm((current) => ({ ...current, imageUrl: data.imageUrl }));
         } catch (error) {
             console.error(error);
