@@ -40,10 +40,10 @@ export const newsApi = {
 };
 
 export const uploadApi = {
-    eventImage: (file) => {
+    image: (file) => {
         const formData = new FormData();
         formData.append("image", file);
-        return api.post("/uploads/event-image", formData);
+        return api.post("/uploads/image", formData);
     },
 };
 
