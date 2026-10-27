@@ -42,6 +42,14 @@ export default function MemberDetailModal({ open, onClose, member }) {
                             <span className="font-mono font-semibold">{member.memberId}</span>
                         </div>
                         <div className="flex justify-between border-b border-gray-100 pb-2">
+                            <span className="text-gray-500">E-mail</span>
+                            <span className="font-semibold">{member.email || "—"}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-100 pb-2">
+                            <span className="text-gray-500">Téléphone</span>
+                            <span className="font-semibold">{member.phone || "—"}</span>
+                        </div>
+                        <div className="flex justify-between border-b border-gray-100 pb-2">
                             <span className="text-gray-500">Rôle</span>
                             <span className="font-semibold capitalize">{member.role}</span>
                         </div>

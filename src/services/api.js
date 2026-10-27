@@ -1,9 +1,6 @@
-// Path: src/services/api.js
 import axios from "axios";
 
-const api = axios.create({
-    baseURL: "/api",
-});
+const api = axios.create({ baseURL: "/api" });
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("sg_token");
@@ -20,6 +17,8 @@ export const authApi = {
 export const userApi = {
     create: (fullName, role) => api.post("/users/create", { fullName, role }),
     getAll: () => api.get("/users"),
+    update: (id, data) => api.put(`/users/${id}`, data),
+    archive: (id) => api.delete(`/users/${id}`),
     resetPassword: (id) => api.put(`/users/${id}/reset-password`),
     bulkCreate: (members) => api.post("/users/bulk-create", { members }),
     updateMe: (fullName) => api.put("/users/me", { fullName }),
