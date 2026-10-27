@@ -31,6 +31,13 @@ export const membershipRequestApi = {
     reject: (id, reason) => api.put(`/membership-requests/${id}/reject`, { reason }),
 };
 
+export const newsApi = {
+    getAll: () => api.get("/news"),\n    getAdminAll: () => api.get("/news/admin"),
+    create: (data) => api.post("/news", data),
+    update: (id, data) => api.put(`/news/${id}`, data),
+    remove: (id) => api.delete(`/news/${id}`),
+};
+
 export const eventApi = {
     create: (data) => api.post("/events", data),
     getAll: () => api.get("/events"),
