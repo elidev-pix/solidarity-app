@@ -80,6 +80,8 @@ function Login() {
             </div>
           </div>
 
+          <div className="-mt-3 text-right"><Link to="/forgot-password" className="text-sm font-medium text-[#D6336C] hover:text-[#B36CB2]">Mot de passe oublié ?</Link></div>
+
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           <button
