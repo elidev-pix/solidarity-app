@@ -32,7 +32,8 @@ export const membershipRequestApi = {
 };
 
 export const newsApi = {
-    getAll: () => api.get("/news"),\n    getAdminAll: () => api.get("/news/admin"),
+    getAll: () => api.get("/news"),
+    getAdminAll: () => api.get("/news/admin"),
     create: (data) => api.post("/news", data),
     update: (id, data) => api.put(`/news/${id}`, data),
     remove: (id) => api.delete(`/news/${id}`),
