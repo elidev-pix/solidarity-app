@@ -8,6 +8,8 @@ import App from './App.jsx'
 import JoinUs from './Pages/JoinUs.jsx'
 import Login from './Pages/Login.jsx'
 import ChangePassword from './Pages/ChangePassword.jsx'
+import ForgotPassword from './Pages/ForgotPassword.jsx'
+import ResetPassword from './Pages/ResetPassword.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import DashboardLayout from './Layouts/DashboardLayout.jsx'
@@ -56,6 +58,8 @@ const router = createBrowserRouter([
   { path: '/app', element: <App /> },
   { path: '/join', element: <JoinUs /> },
   { path: '/login', element: <Login /> },
+  { path: '/forgot-password', element: <ForgotPassword /> },
+  { path: '/reset-password', element: <ResetPassword /> },
   {
     path: '/change-password',
     element: (

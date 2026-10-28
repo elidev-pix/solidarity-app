@@ -4,7 +4,7 @@ const api = axios.create({ baseURL: "/api" });
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("sg_token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token) config.headers.Authorization = "Bearer " + token;
     return config;
 });
 
@@ -12,14 +12,16 @@ export const authApi = {
     login: (memberId, password) => api.post("/auth/login", { memberId, password }),
     changePassword: (oldPassword, newPassword) =>
         api.put("/auth/change-password", { oldPassword, newPassword }),
+    requestPasswordReset: (email) => api.post("/auth/forgot-password", { email }),
+    resetPassword: (token, newPassword) => api.post("/auth/reset-password", { token, newPassword }),
 };
 
 export const userApi = {
     create: (fullName, role) => api.post("/users/create", { fullName, role }),
     getAll: () => api.get("/users"),
-    update: (id, data) => api.put(`/users/${id}`, data),
-    archive: (id) => api.delete(`/users/${id}`),
-    resetPassword: (id) => api.put(`/users/${id}/reset-password`),
+    update: (id, data) => api.put("/users/" + id, data),
+    archive: (id) => api.delete("/users/" + id),
+    resetPassword: (id) => api.put("/users/" + id + "/reset-password"),
     bulkCreate: (members) => api.post("/users/bulk-create", { members }),
     updateMe: (data) => api.put("/users/me", data),
 };
@@ -27,16 +29,16 @@ export const userApi = {
 export const membershipRequestApi = {
     create: (data) => api.post("/membership-requests", data),
     getAll: (status) => api.get("/membership-requests", { params: { status } }),
-    accept: (id) => api.put(`/membership-requests/${id}/accept`),
-    reject: (id, reason) => api.put(`/membership-requests/${id}/reject`, { reason }),
+    accept: (id) => api.put("/membership-requests/" + id + "/accept"),
+    reject: (id, reason) => api.put("/membership-requests/" + id + "/reject", { reason }),
 };
 
 export const newsApi = {
     getAll: () => api.get("/news"),
     getAdminAll: () => api.get("/news/admin"),
     create: (data) => api.post("/news", data),
-    update: (id, data) => api.put(`/news/${id}`, data),
-    remove: (id) => api.delete(`/news/${id}`),
+    update: (id, data) => api.put("/news/" + id, data),
+    remove: (id) => api.delete("/news/" + id),
 };
 
 export const uploadApi = {
@@ -50,23 +52,23 @@ export const uploadApi = {
 export const eventApi = {
     create: (data) => api.post("/events", data),
     getAll: () => api.get("/events"),
-    getById: (id) => api.get(`/events/${id}`),
-    update: (id, data) => api.put(`/events/${id}`, data),
-    remove: (id) => api.delete(`/events/${id}`),
+    getById: (id) => api.get("/events/" + id),
+    update: (id, data) => api.put("/events/" + id, data),
+    remove: (id) => api.delete("/events/" + id),
 };
 
 export const participationApi = {
     register: (eventId) => api.post("/participations/register", { eventId }),
     markUnavailable: (eventId) => api.post("/participations/unavailable", { eventId }),
     getMine: () => api.get("/participations/me"),
-    getForEvent: (eventId) => api.get(`/participations/event/${eventId}`),
-    validate: (id, status) => api.put(`/participations/${id}/validate`, { status }),
+    getForEvent: (eventId) => api.get("/participations/event/" + eventId),
+    validate: (id, status) => api.put("/participations/" + id + "/validate", { status }),
 };
 
 export const contributionApi = {
     create: (data) => api.post("/contributions", data),
     getMine: (year) => api.get("/contributions/me", { params: { year } }),
-    getForUser: (userId) => api.get(`/contributions/user/${userId}`),
+    getForUser: (userId) => api.get("/contributions/user/" + userId),
     getAll: (year) => api.get("/contributions", { params: { year } }),
 };
 
@@ -75,7 +77,7 @@ export const initiativeApi = {
     getMine: () => api.get("/initiatives/me"),
     getAll: (status) => api.get("/initiatives", { params: { status } }),
     review: (id, status, rejectionReason) =>
-        api.put(`/initiatives/${id}/review`, { status, rejectionReason }),
+        api.put("/initiatives/" + id + "/review", { status, rejectionReason }),
 };
 
 export const settingsApi = {
