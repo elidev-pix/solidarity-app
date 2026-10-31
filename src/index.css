@@ -211,3 +211,28 @@
 }
 
 @
+
+/* Magazine / rich article typography */
+.news-editor-content p { margin: 0.65rem 0; }
+.news-editor-content h1, .news-editor-content h2, .news-editor-content h3 { margin: 1.1rem 0 0.55rem; font-weight: 700; line-height: 1.25; }
+.news-editor-content h1 { font-size: 1.8rem; }
+.news-editor-content h2 { font-size: 1.45rem; }
+.news-editor-content ul { list-style: disc; padding-left: 1.5rem; }
+.news-editor-content ol { list-style: decimal; padding-left: 1.5rem; }
+.news-editor-content blockquote { border-left: 3px solid #D6336C; margin: 1rem 0; padding-left: 1rem; color: #6b7280; }
+.news-editor-content img { display: block; max-height: 420px; margin: 1rem auto; border-radius: 0.9rem; object-fit: contain; }
+.news-editor-content a, .news-article-body a { color: #D6336C; text-decoration: underline; }
+.news-editor-content p.is-editor-empty:first-child::before { color: #9ca3af; content: attr(data-placeholder); float: left; height: 0; pointer-events: none; }
+.news-article-body { color: #374151; font-size: 1.075rem; line-height: 1.9; overflow-wrap: anywhere; }
+.news-article-body p { margin: 1.2rem 0; }
+.news-article-body h1, .news-article-body h2, .news-article-body h3 { margin: 2rem 0 0.8rem; color: #1f2937; font-family: var(--font-fraunces); font-weight: 800; line-height: 1.25; }
+.news-article-body h1 { font-size: 2rem; }
+.news-article-body h2 { font-size: 1.65rem; }
+.news-article-body h3 { font-size: 1.35rem; }
+.news-article-body ul { list-style: disc; margin: 1rem 0; padding-left: 1.7rem; }
+.news-article-body ol { list-style: decimal; margin: 1rem 0; padding-left: 1.7rem; }
+.news-article-body blockquote { margin: 1.5rem 0; border-left: 4px solid #D6336C; padding: 0.5rem 1.2rem; color: #6b7280; font-style: italic; background: #fff7fa; }
+.news-article-body figure { margin: 2rem 0; }
+.news-article-body figure img { width: 100%; max-height: 620px; border-radius: 1rem; object-fit: contain; background: #f9fafb; }
+.news-article-body figcaption { margin-top: 0.5rem; text-align: center; color: #9ca3af; font-size: 0.85rem; }
+.news-article-body hr { margin: 2rem 0; border-color: #e5e7eb; }
