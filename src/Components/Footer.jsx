@@ -1,4 +1,5 @@
-import React from 'react'\nimport { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, MapPin, PhoneCall } from 'lucide-react'
 import ScrollReveal from './ScrollReveal.jsx'
 
