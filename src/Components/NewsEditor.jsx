@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
@@ -23,7 +23,7 @@ export default function NewsEditor({ value, onChange }) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileRef = useRef(null);
-  const initialValue = useMemo(() => value || { type: "doc", content: [{ type: "paragraph" }] }, []);
+  const initialValueRef = useRef(value || { type: "doc", content: [{ type: "paragraph" }] });
 
   const editor = useEditor({
     extensions: [
@@ -34,7 +34,7 @@ export default function NewsEditor({ value, onChange }) {
       Placeholder.configure({ placeholder: "Racontez l’actualité de Solidarity Group…" }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
-    content: initialValue,
+    content: initialValueRef.current,
     onUpdate: ({ editor: instance }) => onChange(instance.getJSON(), instance.getText()),
     editorProps: { attributes: { class: "news-editor-content min-h-[260px] px-4 py-4 text-[15px] leading-7 text-gray-800 focus:outline-none" } },
   });
