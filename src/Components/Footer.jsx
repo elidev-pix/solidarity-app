@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react'\nimport { Link } from 'react-router-dom'
 import { Mail, MapPin, PhoneCall } from 'lucide-react'
 import ScrollReveal from './ScrollReveal.jsx'
 
@@ -6,7 +6,7 @@ const quickLinks = [
   { label: 'Accueil', href: '/' },
   { label: 'À propos', href: '#about' },
   { label: 'Nos actions', href: '#action' },
-  { label: 'Actualités', href: '#hero' },
+  { label: 'Actualités', href: '/actualites' },
   { label: 'Evènements', href: '#event' },
 ]
 
@@ -89,7 +89,7 @@ function Footer() {
             <ul className="flex flex-col gap-3 text-sm text-gray-500">
               {quickLinks.map(({ label, href }) => (
                 <li key={label}>
-                  <a href={href} className="nav-link hover:text-[#D6336C] transition-colors">{label}</a>
+                  {href.startsWith("/") ? <Link to={href} className="nav-link hover:text-[#D6336C] transition-colors">{label}</Link> : <a href={href} className="nav-link hover:text-[#D6336C] transition-colors">{label}</a>}
                 </li>
               ))}
             </ul>
