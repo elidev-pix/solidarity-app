@@ -47,7 +47,7 @@ function News() {
                   {featured.summary && <p className="mt-2 max-w-xl text-sm text-gray-100">{featured.summary}</p>}
                   <p className="mt-2 text-sm text-gray-200">{formatDate(featured.publishedAt || featured.createdAt)}</p>
                 </div>
-              </article>
+              </Link>
               <div className="flex w-full flex-col gap-4 lg:w-1/3">
                 {visible.slice(1).map((item) => (
                   <Link key={item._id} to={`/actualites/${item.slug || item._id}`} className="flex min-h-28 sm:min-h-32 w-full overflow-hidden rounded-2xl bg-white transition hover:-translate-y-0.5 hover:shadow-lg">
@@ -57,7 +57,7 @@ function News() {
                       <h3 className="mt-1 text-sm font-bold line-clamp-2">{item.title}</h3>
                       <p className="mt-2 text-xs text-gray-500">{formatDate(item.publishedAt || item.createdAt)}</p>
                     </div>
-                  </article>
+                  </Link>
                 ))}
               </div>
             </>
