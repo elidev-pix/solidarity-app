@@ -35,6 +35,7 @@ export const membershipRequestApi = {
 
 export const newsApi = {
     getAll: () => api.get("/news"),
+    getBySlug: (slug) => api.get("/news/" + encodeURIComponent(slug)),
     getAdminAll: () => api.get("/news/admin"),
     create: (data) => api.post("/news", data),
     update: (id, data) => api.put("/news/" + id, data),

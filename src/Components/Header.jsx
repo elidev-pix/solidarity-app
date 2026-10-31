@@ -6,7 +6,7 @@ const navItems = [
   { label: 'Accueil', href: '/' },
   { label: 'À propos', href: '#about' },
   { label: 'Nos actions', href: '#action' },
-  { label: 'Actualités', href: '#hero' },
+  { label: 'Actualités', href: '/actualites' },
   { label: 'Evènements', href: '#event' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -28,7 +28,7 @@ function Header() {
         {/* Liens — visibles seulement à partir de lg */}
         <ul className="hidden lg:flex gap-8">
           {navItems.map(({ label, href }) => (
-            <li key={label}><a href={href} className="nav-link">{label}</a></li>
+            <li key={label}>{href.startsWith("/") ? <Link to={href} className="nav-link">{label}</Link> : <a href={href} className="nav-link">{label}</a>}</li>
           ))}
         </ul>
 
@@ -59,7 +59,7 @@ function Header() {
           <ul className="flex flex-col items-center gap-6 py-8">
             {navItems.map(({ label, href }) => (
               <li key={label}>
-                <a href={href} className="nav-link text-base" onClick={() => setOpen(false)}>{label}</a>
+                {href.startsWith("/") ? <Link to={href} className="nav-link text-base" onClick={() => setOpen(false)}>{label}</Link> : <a href={href} className="nav-link text-base" onClick={() => setOpen(false)}>{label}</a>}
               </li>
             ))}
             <Link

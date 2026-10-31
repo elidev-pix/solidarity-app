@@ -4,6 +4,8 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 import Home from './Home.jsx'
+import NewsIndex from './Pages/NewsIndex.jsx'
+import NewsArticle from './Pages/NewsArticle.jsx'
 import App from './App.jsx'
 import JoinUs from './Pages/JoinUs.jsx'
 import Login from './Pages/Login.jsx'
@@ -55,6 +57,8 @@ const adminLinks = [
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
+  { path: '/actualites', element: <NewsIndex /> },
+  { path: '/actualites/:slug', element: <NewsArticle /> },
   { path: '/app', element: <App /> },
   { path: '/join', element: <JoinUs /> },
   { path: '/login', element: <Login /> },
