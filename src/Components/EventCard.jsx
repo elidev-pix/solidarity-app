@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'\nimport { Link } from 'react-router-dom'
 import { CalendarDays, MapPin } from 'lucide-react'
 import ScrollReveal from './ScrollReveal.jsx'
 import { eventApi } from '../services/api.js'
@@ -25,7 +25,7 @@ function EventCard() {
     <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch justify-center px-2 sm:px-4 gap-6">
       {events.map((event, index) => (
         <ScrollReveal key={event._id} delay={index * 80} duration={600} distance={20} threshold={0.2}>
-          <article className="glow-purple flex flex-col rounded-2xl bg-white border border-gray-200 shadow-lg overflow-hidden h-full min-h-80 w-full max-w-xs mx-auto p-4 gap-4">
+          <Link to={`/evenements/${event._id}`} className="block"><article className="glow-purple flex flex-col rounded-2xl bg-white border border-gray-200 shadow-lg overflow-hidden h-full min-h-80 w-full max-w-xs mx-auto p-4 gap-4">
             {event.imageUrl ? <img src={event.imageUrl} alt={event.title} className="rounded-md w-full h-40 object-cover" /> : <div className="rounded-md w-full h-40 bg-pink-50 flex items-center justify-center text-sm text-gray-400">Événement</div>}
             <div className="flex flex-col gap-1">
               <h2 className="font-bold">{event.title}</h2>
