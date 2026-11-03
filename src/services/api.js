@@ -53,9 +53,14 @@ export const uploadApi = {
 export const eventApi = {
     create: (data) => api.post("/events", data),
     getAll: () => api.get("/events"),
+    getAdminAll: () => api.get("/events/admin"),
     getById: (id) => api.get("/events/" + id),
     update: (id, data) => api.put("/events/" + id, data),
     remove: (id) => api.delete("/events/" + id),
+};
+
+export const activityApi = {
+    getAll: (params = {}) => api.get("/activities", { params }),
 };
 
 export const participationApi = {

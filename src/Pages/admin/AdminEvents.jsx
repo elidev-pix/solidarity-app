@@ -22,7 +22,7 @@ export default function AdminEvents() {
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const { data } = await eventApi.getAll();
+            const { data } = await eventApi.getAdminAll();
             setEvents(data);
         } catch (error) {
             console.error(error);
@@ -75,6 +75,7 @@ export default function AdminEvents() {
                             </p>
                             {ev.location && <p className="mt-1 text-xs text-gray-400">{ev.location}</p>}
                             <p className="mt-2 line-clamp-2 text-sm text-gray-600">{ev.description}</p>
+                            <span className={`mt-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${ev.isPublished === false ? "bg-amber-50 text-amber-700" : "bg-green-50 text-green-700"}`}>{ev.isPublished === false ? "Brouillon" : "Publié"}</span>
 
                             <div className="mt-4 flex gap-2">
                                 <button
