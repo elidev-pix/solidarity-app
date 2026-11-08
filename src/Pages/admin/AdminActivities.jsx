@@ -18,7 +18,7 @@ export default function AdminActivities() {
   }
   useEffect(() => { load(1); }, []);
   function change(e) { setFilters((current) => ({ ...current, [e.target.name]: e.target.value })); }
-  return <div className="p-6">
+  return <div className="min-w-0 p-4 sm:p-6 lg:p-8">
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"><div><h1 className="font-fraunces text-2xl font-bold text-gray-800">Journal des activités</h1><p className="mt-1 text-sm text-gray-500">Historique des actions effectuées dans l’administration.</p></div><span className="text-sm text-gray-500">{data.total} action(s)</span></div>
     <div className="mt-6 grid gap-3 rounded-2xl border border-gray-100 bg-white p-4 sm:grid-cols-2 lg:grid-cols-5">
       <label className="text-xs font-semibold text-gray-500">Action<select name="action" value={filters.action} onChange={change} className="mt-1 w-full rounded-lg border p-2 text-sm"><option value="">Toutes</option>{Object.entries(labels).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></label>
