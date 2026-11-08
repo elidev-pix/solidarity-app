@@ -110,7 +110,8 @@ export default function DashboardAnalytics({ monthlyStats = [], year }) {
     const totalMonthlyContributions = data.reduce((sum, item) => sum + (item.contributions || 0), 0);
     const totalNewMembers = data.reduce((sum, item) => sum + (item.newMembers || 0), 0);
     const totalMonthlyParticipations = data.reduce((sum, item) => sum + (item.participations || 0), 0);
-    const hasData = totalMonthlyContributions > 0 || totalNewMembers > 0 || totalMonthlyParticipations > 0;
+    const hasContributionData = totalMonthlyContributions > 0;
+    const hasCommunityData = totalNewMembers > 0 || totalMonthlyParticipations > 0;
 
     return (
         <section className="mt-8 space-y-5">
@@ -136,7 +137,7 @@ export default function DashboardAnalytics({ monthlyStats = [], year }) {
                         <div className="rounded-xl bg-[#D6336C]/10 p-3 text-[#D6336C]"><TrendingUp size={20} /></div>
                     </div>
                     <div className="mt-5">
-                        {hasData ? <ContributionsChart data={data} /> : <EmptyChart message="Les données de cotisations apparaîtront ici dès les premiers versements de l'année." />}
+                        {hasContributionData ? <ContributionsChart data={data} /> : <EmptyChart message="Les données de cotisations apparaîtront ici dès les premiers versements de l'année." />}
                     </div>
                 </article>
 
@@ -150,7 +151,7 @@ export default function DashboardAnalytics({ monthlyStats = [], year }) {
                         <div className="rounded-xl bg-[#B36CB2]/10 p-3 text-[#B36CB2]"><CalendarCheck size={20} /></div>
                     </div>
                     <div className="mt-5">
-                        {hasData ? <CommunityChart data={data} /> : <EmptyChart message="L'activité de la communauté sera représentée ici au fur et à mesure des inscriptions et événements." />}
+                        {hasCommunityData ? <CommunityChart data={data} /> : <EmptyChart message="L'activité de la communauté sera représentée ici au fur et à mesure des inscriptions et événements." />}
                     </div>
                 </article>
             </div>
