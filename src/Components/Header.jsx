@@ -63,7 +63,7 @@ function Header() {
               </li>
             ))}
             <Link
-              to="/app"
+              to="/join"
               onClick={() => setOpen(false)}
               className="flex bg-[#B36CB2] items-center gap-2 text-white px-5 py-2.5 rounded-2xl shadow"
             >
