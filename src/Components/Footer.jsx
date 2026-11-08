@@ -12,9 +12,9 @@ const quickLinks = [
 ]
 
 const legalLinks = [
-  { label: 'Mentions légales', href: '#' },
-  { label: 'Politique de confidentialité', href: '#' },
-  { label: "Conditions d'utilisation", href: '#' },
+  { label: 'Mentions légales', href: '/mentions-legales' },
+  { label: 'Politique de confidentialité', href: '/politique-confidentialite' },
+  { label: "Conditions générales d'utilisation", href: '/conditions-generales-utilisation' },
 ]
 
 /* Icônes réseaux sociaux en SVG natif (absentes de lucide-react) */
@@ -124,7 +124,7 @@ function Footer() {
           <ul className="flex flex-wrap justify-center gap-6 text-xs text-gray-400">
             {legalLinks.map(({ label, href }) => (
               <li key={label}>
-                <a href={href} className="hover:text-[#D6336C] transition-colors">{label}</a>
+                <Link to={href} className="hover:text-[#D6336C] transition-colors">{label}</Link>
               </li>
             ))}
           </ul>
