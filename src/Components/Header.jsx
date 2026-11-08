@@ -7,6 +7,7 @@ const navItems = [
   { label: 'À propos', href: '#about' },
   { label: 'Nos actions', href: '#action' },
   { label: 'Actualités', href: '/actualites' },
+  { label: 'Faire un don', href: '/faire-un-don' },
   { label: 'Evènements', href: '#event' },
   { label: 'Contact', href: '#contact' },
 ]
