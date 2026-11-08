@@ -40,7 +40,7 @@ export default function AdminInitiatives() {
     };
 
     return (
-        <div className="p-6">
+        <div className="min-w-0 p-4 sm:p-6 lg:p-8">
             <h1 className="font-fraunces text-2xl font-bold text-gray-800">Initiatives</h1>
 
             <div className="mt-6 space-y-3">
