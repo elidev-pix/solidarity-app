@@ -15,6 +15,10 @@ export default function AdminMembers() {
     const [importOpen, setImportOpen] = useState(false);
     const [credentials, setCredentials] = useState(null);
     const [credModalOpen, setCredModalOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
+    const [adding, setAdding] = useState(false);
+    const [addError, setAddError] = useState("");
+    const [newMember, setNewMember] = useState({ fullName: "", email: "", phone: "" });
 
     const fetchMembers = async () => {
         setLoading(true);
@@ -29,18 +33,30 @@ export default function AdminMembers() {
 
     useEffect(() => { fetchMembers(); }, []);
 
-    const handleAdd = async () => {
-        const fullName = window.prompt("Nom complet du nouveau membre :");
-        if (!fullName?.trim()) return;
+    const handleAdd = async (event) => {
+        event.preventDefault();
+        if (!newMember.fullName.trim()) {
+            setAddError("Le nom complet est obligatoire.");
+            return;
+        }
+        setAdding(true);
+        setAddError("");
         try {
-            const { data } = await userApi.create(fullName.trim(), "member");
-            setCredentials(data.credentials);
+            const { data } = await userApi.create({
+                fullName: newMember.fullName.trim(),
+                email: newMember.email.trim(),
+                phone: newMember.phone.trim(),
+                role: "member",
+            });
+            setCredentials({ ...data.credentials, emailSent: data.emailSent });
             setCredModalOpen(true);
+            setAddOpen(false);
+            setNewMember({ fullName: "", email: "", phone: "" });
             await fetchMembers();
         } catch (error) {
             console.error(error);
-            alert(error.response?.data?.message || "Erreur lors de la création.");
-        }
+            setAddError(error.response?.data?.message || "Erreur lors de la création du membre.");
+        } finally { setAdding(false); }
     };
 
     const handleArchive = async (member) => {
@@ -62,7 +78,7 @@ export default function AdminMembers() {
         <div className="min-w-0 p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#D6336C]">COMMUNAUTÉ</p><h1 className="mt-1 font-fraunces text-2xl font-bold text-gray-900 sm:text-3xl">Membres</h1><p className="mt-1 text-sm text-gray-500">{members.length} membre(s) actif(s)</p></div>
-                <div className="grid grid-cols-2 gap-2 sm:flex"><button onClick={() => setImportOpen(true)} className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 sm:px-4"><Upload size={16}/> Importer</button><button onClick={handleAdd} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#D6336C] px-3 py-2.5 text-sm font-semibold text-white hover:bg-[#B36CB2] sm:px-4"><UserPlus size={16}/> Ajouter</button></div>
+                <div className="grid grid-cols-2 gap-2 sm:flex"><button onClick={() => setImportOpen(true)} className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 sm:px-4"><Upload size={16}/> Importer</button><button onClick={() => { setAddError(""); setAddOpen(true); }} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#D6336C] px-3 py-2.5 text-sm font-semibold text-white hover:bg-[#B36CB2] sm:px-4"><UserPlus size={16}/> Ajouter</button></div>
             </div>
 
             {loading ? <div className="mt-6 rounded-2xl bg-white p-8 text-center text-sm text-gray-500">Chargement des membres…</div> : members.length === 0 ? <div className="mt-6 rounded-2xl border border-dashed border-gray-200 bg-white p-10 text-center"><Users className="mx-auto text-gray-300" size={30}/><p className="mt-3 text-sm text-gray-500">Aucun membre actif à afficher.</p></div> : (
@@ -78,6 +94,7 @@ export default function AdminMembers() {
                 </>
             )}
 
+            {addOpen && <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/50 p-3 sm:p-6"><form onSubmit={handleAdd} className="my-4 max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-5 shadow-xl sm:p-7"><div className="flex items-start justify-between gap-3"><div><h2 className="font-fraunces text-xl font-bold text-gray-900">Ajouter un membre</h2><p className="mt-1 text-xs leading-5 text-gray-500">Les identifiants seront générés automatiquement.</p></div><button type="button" onClick={() => setAddOpen(false)} aria-label="Fermer" className="rounded-full p-2 text-gray-400 hover:bg-gray-100">×</button></div><div className="mt-5 space-y-4"><label className="block space-y-2 text-sm font-semibold text-gray-700">Nom complet *<input required autoFocus value={newMember.fullName} onChange={(event) => setNewMember({ ...newMember, fullName: event.target.value })} className="w-full rounded-xl border border-gray-200 px-3 py-3 text-sm font-normal outline-none focus:border-[#D6336C]" placeholder="Nom et prénom"/></label><label className="block space-y-2 text-sm font-semibold text-gray-700">Adresse e-mail<input type="email" value={newMember.email} onChange={(event) => setNewMember({ ...newMember, email: event.target.value })} className="w-full rounded-xl border border-gray-200 px-3 py-3 text-sm font-normal outline-none focus:border-[#D6336C]" placeholder="membre@exemple.com"/><span className="text-xs font-normal text-gray-400">Si renseignée, les identifiants seront envoyés par e-mail.</span></label><label className="block space-y-2 text-sm font-semibold text-gray-700">Téléphone<input type="tel" value={newMember.phone} onChange={(event) => setNewMember({ ...newMember, phone: event.target.value })} className="w-full rounded-xl border border-gray-200 px-3 py-3 text-sm font-normal outline-none focus:border-[#D6336C]" placeholder="+226 …"/></label></div>{addError && <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{addError}</p>}<div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end"><button type="button" onClick={() => setAddOpen(false)} className="rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600">Annuler</button><button type="submit" disabled={adding} className="rounded-xl bg-[#D6336C] px-5 py-3 text-sm font-semibold text-white disabled:opacity-50">{adding ? "Création…" : "Créer le membre"}</button></div></form></div>}
             <MemberDetailModal open={detailOpen} onClose={() => setDetailOpen(false)} member={selected}/>
             <MemberEditModal open={editOpen} member={selected} onClose={() => setEditOpen(false)} onDone={async () => { setEditOpen(false); await fetchMembers(); }}/>
             <BulkImportModal open={importOpen} onClose={() => setImportOpen(false)} onDone={fetchMembers}/>
