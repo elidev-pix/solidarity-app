@@ -53,9 +53,14 @@ export const uploadApi = {
 export const eventApi = {
     create: (data) => api.post("/events", data),
     getAll: () => api.get("/events"),
+    getAdminAll: () => api.get("/events/admin"),
     getById: (id) => api.get("/events/" + id),
     update: (id, data) => api.put("/events/" + id, data),
     remove: (id) => api.delete("/events/" + id),
+};
+
+export const activityApi = {
+    getAll: (params = {}) => api.get("/activities", { params }),
 };
 
 export const participationApi = {
@@ -71,6 +76,8 @@ export const contributionApi = {
     getMine: (year) => api.get("/contributions/me", { params: { year } }),
     getForUser: (userId) => api.get("/contributions/user/" + userId),
     getAll: (year) => api.get("/contributions", { params: { year } }),
+    update: (id, data) => api.put("/contributions/" + id, data),
+    remove: (id) => api.delete("/contributions/" + id),
 };
 
 export const initiativeApi = {
@@ -88,6 +95,10 @@ export const settingsApi = {
 
 export const statsApi = {
     get: () => api.get("/stats"),
+};
+
+export const systemApi = {
+    resetData: (confirmation, adminPassword) => api.post("/system/reset-data", { confirmation, adminPassword }),
 };
 
 export default api;

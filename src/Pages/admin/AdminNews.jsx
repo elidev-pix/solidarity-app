@@ -119,8 +119,7 @@ export default function AdminNews() {
           <label className="space-y-1 text-sm font-medium sm:col-span-2">Titre *<input name="title" required maxLength={180} value={form.title} onChange={change} className={inputClass}/></label>
           <label className="space-y-1 text-sm font-medium">Catégorie<input name="category" value={form.category} onChange={change} className={inputClass}/></label>
           <div className="space-y-2 text-sm font-medium">Image de couverture
-            <input name="imageUrl" type="url" value={form.imageUrl} onChange={change} className={inputClass} placeholder="https://…"/>
-            <label className="block text-xs text-gray-500">Ou importer une image JPEG, PNG ou WebP (5 Mo max.)</label>
+            <label className="block text-xs text-gray-500">Importer une image JPEG, PNG ou WebP (5 Mo max.) directement vers Appwrite Storage.</label>
             <input aria-label="Importer une image de couverture" type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadNewsImage} disabled={uploadingImage || saving} className={inputClass}/>
             {uploadingImage && <span className="block text-xs text-[#D6336C]">Envoi vers Appwrite…</span>}
             {form.imageUrl && <img src={form.imageUrl} alt="Aperçu de couverture" className="h-28 w-full rounded-lg object-cover"/>}

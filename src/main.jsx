@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from './Home.jsx'
 import NewsIndex from './Pages/NewsIndex.jsx'
 import NewsArticle from './Pages/NewsArticle.jsx'
+import EventDetail from './Pages/EventDetail.jsx'
 import App from './App.jsx'
 import JoinUs from './Pages/JoinUs.jsx'
 import Login from './Pages/Login.jsx'
@@ -18,7 +19,7 @@ import DashboardLayout from './Layouts/DashboardLayout.jsx'
 
 import {
   LayoutDashboard, CalendarDays, Wallet, Lightbulb, UserCircle,
-  Users, ClipboardList, CalendarPlus, Settings, Newspaper,
+  Users, ClipboardList, CalendarPlus, Settings, Newspaper, Activity,
 } from 'lucide-react'
 
 import MemberDashboard from './Pages/member/MemberDashboard.jsx'
@@ -32,6 +33,7 @@ import AdminMembers from './Pages/admin/AdminMembers.jsx'
 import AdminRequests from './Pages/admin/AdminRequests.jsx'
 import AdminEvents from './Pages/admin/AdminEvents.jsx'
 import AdminNews from './Pages/admin/AdminNews.jsx'
+import AdminActivities from './Pages/admin/AdminActivities.jsx'
 import AdminContributions from './Pages/admin/AdminContributions.jsx'
 import AdminInitiatives from './Pages/admin/AdminInitiatives.jsx'
 import AdminSettings from './Pages/admin/AdminSettings.jsx'
@@ -50,6 +52,7 @@ const adminLinks = [
   { label: 'Demandes', to: '/admin/demandes', icon: ClipboardList },
   { label: 'Événements', to: '/admin/evenements', icon: CalendarPlus },
   { label: 'Actualités', to: '/admin/actualites', icon: Newspaper },
+  { label: 'Journal des activités', to: '/admin/activites', icon: Activity },
   { label: 'Cotisations', to: '/admin/cotisations', icon: Wallet },
   { label: 'Initiatives', to: '/admin/initiatives', icon: Lightbulb },
   { label: 'Paramètres', to: '/admin/parametres', icon: Settings },
@@ -59,6 +62,7 @@ const router = createBrowserRouter([
   { path: '/', element: <Home /> },
   { path: '/actualites', element: <NewsIndex /> },
   { path: '/actualites/:slug', element: <NewsArticle /> },
+  { path: '/evenements/:id', element: <EventDetail /> },
   { path: '/app', element: <App /> },
   { path: '/join', element: <JoinUs /> },
   { path: '/login', element: <Login /> },
@@ -102,8 +106,10 @@ const router = createBrowserRouter([
       { path: 'demandes', element: <AdminRequests /> },
       { path: 'evenements', element: <AdminEvents /> },
       { path: 'actualites', element: <AdminNews /> },
+      { path: 'activites', element: <AdminActivities /> },
       { path: 'cotisations', element: <AdminContributions /> },
       { path: 'initiatives', element: <AdminInitiatives /> },
+      { path: 'profil', element: <MemberAccount /> },
       { path: 'parametres', element: <AdminSettings /> },
     ],
   },
