@@ -63,7 +63,7 @@ export default function AdminEvents() {
             <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {!loading &&
                     events.map((ev) => (
-                        <div key={ev._id} className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                        <div key={ev._id} className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">\n                            {ev.imageUrl ? <img src={ev.imageUrl} alt={ev.title} className="h-44 w-full object-cover" loading="lazy" /> : <div className="flex h-44 w-full items-center justify-center bg-gradient-to-br from-pink-50 to-purple-50 text-sm text-gray-400">Aucune image</div>}\n                            <div className="p-5">
                             <div className="flex items-start justify-between">
                                 <span className="font-fraunces text-lg font-bold text-gray-800">{ev.title}</span>
                                 <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusStyles[ev.status]}`}>
