@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { contributionApi, userApi } from "@/services/api";
+import { contributionApi, userApi, statsApi } from "@/services/api";
 import { Plus, Pencil, Trash2, X, Save, Wallet } from "lucide-react";
 
 const currentYear = new Date().getFullYear();
@@ -9,7 +9,8 @@ const inputClass = "w-full min-w-0 rounded-xl border border-gray-200 bg-white px
 const methodLabels = { especes: "Espèces", mobile_money: "Mobile Money", virement: "Virement", autre: "Autre" };
 
 export default function AdminContributions() {
-    const [year, setYear] = useState(currentYear);
+    const [year, setYear] = useState(null);
+    const [availableYears, setAvailableYears] = useState([currentYear]);
     const [data, setData] = useState({ totalCollected: 0, contributions: [] });
     const [members, setMembers] = useState([]);
     const [form, setForm] = useState(emptyForm);
@@ -32,7 +33,17 @@ export default function AdminContributions() {
         }
     }, [year]);
 
-    useEffect(() => { fetchData(); }, [fetchData]);
+    useEffect(() => {
+        let active = true;
+        statsApi.get().then(({ data: stats }) => {
+            if (!active) return;
+            setAvailableYears(stats.availableYears || [currentYear]);
+            setYear(stats.year || currentYear);
+        }).catch(() => { if (active) setYear(currentYear); });
+        return () => { active = false; };
+    }, []);
+
+    useEffect(() => { if (year !== null) fetchData(); }, [fetchData, year]);
 
     function startEdit(contribution) {
         setEditingId(contribution._id);
@@ -92,8 +103,8 @@ export default function AdminContributions() {
         <div className="min-w-0 p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#D6336C]">GESTION FINANCIÈRE</p><h1 className="mt-1 font-fraunces text-2xl font-bold text-gray-900 sm:text-3xl">Cotisations</h1><p className="mt-1 text-sm text-gray-500">Suivi et historique des versements des membres.</p></div>
-                <select aria-label="Année des cotisations" value={year} onChange={(e) => { setYear(Number(e.target.value)); cancelEdit(); }} className={`${inputClass} w-full sm:w-36`}>
-                    {[currentYear, currentYear - 1, currentYear - 2, currentYear - 3].map((y) => <option key={y} value={y}>{y}</option>)}
+                <select aria-label="Année des cotisations" value={year ?? currentYear} onChange={(e) => { setYear(Number(e.target.value)); cancelEdit(); }} className={`${inputClass} w-full sm:w-36`}>
+                    {[...new Set([currentYear, ...availableYears])].sort((a, b) => b - a).map((y) => <option key={y} value={y}>{y}</option>)}
                 </select>
             </div>
 
