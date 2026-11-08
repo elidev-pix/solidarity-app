@@ -10,6 +10,8 @@ export default function AdminSettings() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState("");
+    const [emailTestLoading, setEmailTestLoading] = useState(false);
+    const [emailTestMessage, setEmailTestMessage] = useState("");
     const [resetForm, setResetForm] = useState({ confirmation: "", adminPassword: "" });
     const [resetting, setResetting] = useState(false);
     const [resetError, setResetError] = useState("");
@@ -43,6 +45,17 @@ export default function AdminSettings() {
         } catch (error) {
             setSaveMessage(error.response?.data?.message || "Erreur lors de l'enregistrement.");
         } finally { setSaving(false); }
+    };
+
+    const handleTestEmail = async () => {
+        setEmailTestLoading(true);
+        setEmailTestMessage("");
+        try {
+            const { data } = await systemApi.testEmail();
+            setEmailTestMessage(data.message || "E-mail de test envoyé.");
+        } catch (error) {
+            setEmailTestMessage(error.response?.data?.message || "Échec de l'envoi du message de test.");
+        } finally { setEmailTestLoading(false); }
     };
 
     const handleReset = async (event) => {
@@ -90,7 +103,7 @@ export default function AdminSettings() {
             </section>
 
             <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
-                <div className="flex items-start gap-3"><span className="rounded-xl bg-purple-50 p-3 text-[#B36CB2]"><Mail size={20}/></span><div className="min-w-0 flex-1"><h2 className="font-bold text-gray-900">Notifications par e-mail</h2><p className="mt-1 text-xs leading-5 text-gray-500">Les confirmations de demandes, les décisions d'adhésion et les identifiants temporaires sont envoyés par e-mail via Resend.</p><div className="mt-3 flex flex-wrap items-center gap-2"><span className={`size-2.5 rounded-full ${form.emailConfigured ? "bg-green-500" : "bg-amber-500"}`}/><span className="text-sm font-semibold text-gray-700">{form.emailConfigured ? "Variables d'envoi détectées" : "Configuration e-mail incomplète"}</span></div><p className="mt-2 text-xs text-gray-400">Les clés d'accès doivent rester dans les variables d'environnement du backend, jamais dans le frontend.</p></div></div>
+                <div className="flex items-start gap-3"><span className="rounded-xl bg-purple-50 p-3 text-[#B36CB2]"><Mail size={20}/></span><div className="min-w-0 flex-1"><h2 className="font-bold text-gray-900">Notifications par e-mail</h2><p className="mt-1 text-xs leading-5 text-gray-500">Les confirmations de demandes, les décisions d'adhésion et les identifiants temporaires sont envoyés par e-mail via Resend.</p><div className="mt-3 flex flex-wrap items-center gap-2"><span className={`size-2.5 rounded-full ${form.emailConfigured ? "bg-green-500" : "bg-amber-500"}`}/><span className="text-sm font-semibold text-gray-700">{form.emailConfigured ? "Variables d'envoi détectées" : "Configuration e-mail incomplète"}</span></div><p className="mt-2 text-xs text-gray-400">Les clés d'accès doivent rester dans les variables d'environnement du backend, jamais dans le frontend.</p>{emailTestMessage && <p role="status" className="mt-3 rounded-xl bg-gray-50 p-3 text-xs text-gray-700">{emailTestMessage}</p>}<button type="button" onClick={handleTestEmail} disabled={!form.emailConfigured || emailTestLoading} className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"><Mail size={15}/>{emailTestLoading ? "Envoi du test…" : "Envoyer un e-mail de test"}</button></div></div>
             </section>
 
             <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
