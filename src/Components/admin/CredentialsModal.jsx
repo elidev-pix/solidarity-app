@@ -31,6 +31,8 @@ export default function CredentialsModal({ open, onClose, credentials }) {
                 <p className="mt-2 text-sm text-gray-600">
                     Transmets ces identifiants au membre. Ils ne seront plus affichés ensuite.
                 </p>
+                {credentials.emailSent === true && <p className="mt-3 rounded-xl bg-green-50 p-3 text-xs font-medium text-green-700">Les identifiants ont également été envoyés à l’adresse e-mail du membre.</p>}
+                {credentials.emailSent === false && <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs font-medium text-amber-700">L’envoi automatique par e-mail n’a pas abouti. Transmets les identifiants au membre manuellement.</p>}
 
                 <div className="mt-6 space-y-3">
                     <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
