@@ -9,7 +9,7 @@ function DashboardLayout({ links, title, subtitle }) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Sidebar links={links} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <main className="lg:ml-64 p-5 sm:p-8">
+      <main className="min-w-0 lg:ml-64 p-3 sm:p-4">
         <Topbar title={title} subtitle={subtitle} onMenuClick={() => setSidebarOpen(true)} />
         <Outlet />
       </main>
