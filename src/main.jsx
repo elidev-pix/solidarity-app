@@ -109,6 +109,7 @@ const router = createBrowserRouter([
       { path: 'activites', element: <AdminActivities /> },
       { path: 'cotisations', element: <AdminContributions /> },
       { path: 'initiatives', element: <AdminInitiatives /> },
+      { path: 'profil', element: <MemberAccount /> },
       { path: 'parametres', element: <AdminSettings /> },
     ],
   },
