@@ -34,7 +34,9 @@ function JoinUs() {
 
   const start = settings?.membershipPeriodStart ? new Date(settings.membershipPeriodStart) : null;
   const end = settings?.membershipPeriodEnd ? new Date(settings.membershipPeriodEnd) : null;
-  const registrationOpen = Boolean(start && end && !Number.isNaN(start.getTime()) && !Number.isNaN(end.getTime()) && new Date() >= start && new Date() <= end);
+  const endOfCampaign = end ? new Date(end) : null;
+  if (endOfCampaign) endOfCampaign.setHours(23, 59, 59, 999);
+  const registrationOpen = Boolean(start && endOfCampaign && !Number.isNaN(start.getTime()) && !Number.isNaN(endOfCampaign.getTime()) && new Date() >= start && new Date() <= endOfCampaign);
 
   function handleChange(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
