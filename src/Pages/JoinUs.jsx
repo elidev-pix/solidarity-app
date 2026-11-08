@@ -15,6 +15,7 @@ function JoinUs() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [emailStatus, setEmailStatus] = useState("");
   const [form, setForm] = useState({
     firstName: "", lastName: "", birthDate: "", gender: "", profession: "",
     phone: "", whatsapp: "", email: "", city: "", motivation: "",
@@ -55,6 +56,7 @@ function JoinUs() {
         city: form.city.trim(), motivation: form.motivation.trim(),
       });
       setSuccessMessage(data.message || (registrationOpen ? "Votre demande a bien été envoyée." : "Votre demande a été ajoutée à la liste d'attente."));
+      setEmailStatus(data.emailSent === true ? "Un e-mail de confirmation a été envoyé à votre adresse." : "Votre demande est enregistrée, mais l’e-mail de confirmation n’a pas pu être envoyé pour le moment.");
       setSubmitted(true);
     } catch (requestError) {
       console.error("Envoi de la demande impossible :", requestError);
@@ -82,7 +84,7 @@ function JoinUs() {
             <CheckCircle2 size={48} className="text-[#D6336C]" />
             <h2 className="text-xl font-bold text-gray-800">{registrationOpen ? "Candidature envoyée !" : "Inscription sur la liste d'attente enregistrée !"}</h2>
             <p className="max-w-md text-sm leading-6 text-gray-500">{successMessage}</p>
-            <p className="max-w-md text-xs text-gray-400">Un message de confirmation sera envoyé à votre adresse e-mail si le service de messagerie est configuré.</p>
+            <p className="max-w-md text-xs text-gray-400">{emailStatus}</p>
             <Link to="/" className="mt-2 rounded-full bg-[#D6336C] px-5 py-3 text-sm font-semibold text-white">Retour à l'accueil</Link>
           </div>
         ) : (
