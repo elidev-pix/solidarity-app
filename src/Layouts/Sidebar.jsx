@@ -38,10 +38,10 @@ function Sidebar({ links, isOpen, onClose }) {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-bold text-gray-800 truncate">
-              {session?.role === 'admin' ? 'Administrateur' : `${session?.user?.firstName} ${session?.user?.lastName}`}
+              {session?.user?.fullName || (session?.role === 'admin' ? 'Administrateur' : 'Membre')}
             </span>
             <span className="text-xs text-gray-400">
-              {session?.role === 'admin' ? 'Accès complet' : session?.user?.id}
+              {session?.role === 'admin' ? 'Accès administrateur' : session?.user?.memberId || 'Espace membre'}
             </span>
           </div>
         </div>
