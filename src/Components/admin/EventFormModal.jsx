@@ -94,7 +94,7 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
             <label className="block text-xs text-gray-500">Ou importer une image JPEG, PNG ou WebP (5 Mo maximum)</label>
             <input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadCover} disabled={uploadingImage || loading} className={inputClass}/>
             {uploadingImage && <p className="text-xs text-[#D6336C]">Envoi vers Appwrite…</p>}
-            {form.imageUrl && <img src={form.imageUrl} alt="Aperçu de couverture" className="h-40 w-full rounded-xl object-cover"/>}
+            {form.imageUrl && <div className="space-y-2"><img src={form.imageUrl} alt="Aperçu de couverture" className="h-40 w-full rounded-xl object-cover"/><p className="text-xs font-medium text-green-700">Image hébergée sur Appwrite Storage</p></div>}
           </div>
           <div className="space-y-2 sm:col-span-2">
             <div className="flex flex-wrap items-center justify-between gap-2"><label className="text-sm font-semibold">Description détaillée</label><button type="button" onClick={() => setPreview((v) => !v)} className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-3 py-2 text-xs font-semibold text-[#D6336C]">{preview ? <><Pencil size={14}/> Modifier le contenu</> : <><Eye size={14}/> Prévisualiser</>}</button></div>
