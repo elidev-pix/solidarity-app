@@ -94,7 +94,7 @@ export const settingsApi = {
 };
 
 export const statsApi = {
-    get: () => api.get("/stats"),
+    get: (year) => api.get("/stats", { params: year ? { year } : {} }),
 };
 
 export const systemApi = {
