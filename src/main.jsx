@@ -55,6 +55,7 @@ const adminLinks = [
   { label: 'Journal des activités', to: '/admin/activites', icon: Activity },
   { label: 'Cotisations', to: '/admin/cotisations', icon: Wallet },
   { label: 'Initiatives', to: '/admin/initiatives', icon: Lightbulb },
+  { label: 'Mon profil', to: '/admin/profil', icon: UserCircle },
   { label: 'Paramètres', to: '/admin/parametres', icon: Settings },
 ]
 
