@@ -48,7 +48,7 @@ export default function MemberEditModal({ open, member, onClose, onDone }) {
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true" aria-labelledby="edit-member-title">
-            <form onSubmit={handleSubmit} className="relative w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl">
+            <form onSubmit={handleSubmit} className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-5 shadow-xl sm:p-6">
                 <button type="button" onClick={onClose} aria-label="Fermer" className="absolute right-4 top-4 text-gray-400 hover:text-gray-700">
                     <X className="size-5" />
                 </button>
