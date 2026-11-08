@@ -97,4 +97,4 @@ export const statsApi = {
     get: () => api.get("/stats"),
 };
 
-export default api;
+export const systemApi = {\n    resetData: (confirmation, adminPassword) => api.post("/system/reset-data", { confirmation, adminPassword }),\n};\n\nexport default api;
