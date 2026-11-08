@@ -45,7 +45,7 @@ function MemberDashboard() {
     const values = Array(12).fill(0);
     (dashboard.contributions?.history || []).forEach((contribution) => {
       const date = new Date(contribution.paidAt || contribution.createdAt);
-      if (!Number.isNaN(date.getTime()) && date.getFullYear() === year) values[date.getMonth()] += Number(contribution.amount || 0);
+      if (!Number.isNaN(date.getTime())) values[date.getMonth()] += Number(contribution.amount || 0);
     });
     return values;
   }, [dashboard.contributions, year]);
