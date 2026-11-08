@@ -39,7 +39,7 @@ export default function BulkImportModal({ open, onClose, onDone }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl">
+            <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-5 shadow-xl sm:p-6">
                 <button onClick={onClose} className="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
                     <X className="size-5" />
                 </button>
