@@ -121,7 +121,7 @@ export default function AdminContributions() {
                     <select value={form.method} onChange={(e) => setForm({ ...form, method: e.target.value })} className={inputClass}><option value="especes">Espèces</option><option value="mobile_money">Mobile Money</option><option value="virement">Virement</option><option value="autre">Autre</option></select>
                     <input required type="date" aria-label="Date du versement" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} className={inputClass}/>
                     <input placeholder="Note (facultatif)" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} className={`${inputClass} sm:col-span-2 xl:col-span-4`}/>
-                    <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#D6336C] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B36CB2] disabled:opacity-60"><Save size={16}/>{saving ? "Enregistrement…" : editingId ? "Mettre à jour" : <><Plus size={16}/> Ajouter</>}</button>
+                    <button type="submit" disabled={saving || year === null} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#D6336C] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B36CB2] disabled:opacity-60"><Save size={16}/>{saving ? "Enregistrement…" : editingId ? "Mettre à jour" : <><Plus size={16}/> Ajouter</>}</button>
                 </div>
                 {error && <p role="alert" className="mt-3 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
             </form>
