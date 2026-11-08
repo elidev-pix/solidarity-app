@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { contributionApi } from "@/services/api";
 import { Wallet } from "lucide-react";
 
-const currentYear = new Date().getFullYear();
 const methods = { especes: "Espèces", mobile_money: "Mobile Money", virement: "Virement", autre: "Autre" };
 
 export default function MemberContributions() {
@@ -10,7 +9,7 @@ export default function MemberContributions() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        contributionApi.getMine(currentYear).then(({ data: result }) => setData(result))
+        contributionApi.getMine().then(({ data: result }) => setData(result))
             .catch((requestError) => { console.error(requestError); setError("Impossible de charger vos cotisations."); });
     }, []);
 
