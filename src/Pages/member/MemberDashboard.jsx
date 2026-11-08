@@ -76,12 +76,16 @@ function MemberDashboard() {
       {error && <p role="alert" className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-sm text-amber-800">{error}</p>}
 
       <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {loading ? Array.from({ length: 4 }).map((_, index) => <div key={index} className="h-36 animate-pulse rounded-2xl bg-white"/> : <>
+        {loading ? (
+          Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="h-36 animate-pulse rounded-2xl bg-white" />
+          ))
+        ) : (<>
           <StatCard icon={CalendarCheck} label="Activités à venir" value={upcomingEvents}/>
           <StatCard icon={Users} label="Participations validées" value={participationCount}/>
           <StatCard icon={Wallet} label="Cotisations versées" value={`${money(totalPaid)} FCFA`}/>
           <StatCard icon={Lightbulb} label="Mes initiatives" value={dashboard.initiatives.length}/>
-        </>}
+        </>)}
       </div>
 
       <section className="space-y-4">
