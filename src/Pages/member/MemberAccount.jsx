@@ -57,7 +57,7 @@ export default function MemberAccount() {
     };
 
     return (
-        <div className="p-6">
+        <div className="min-w-0 p-4 sm:p-6 lg:p-8">
             <h1 className="font-fraunces text-2xl font-bold text-gray-800">Mon compte</h1>
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
                 <div className="rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm">
