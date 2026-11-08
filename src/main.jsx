@@ -13,6 +13,8 @@ import Login from './Pages/Login.jsx'
 import ChangePassword from './Pages/ChangePassword.jsx'
 import ForgotPassword from './Pages/ForgotPassword.jsx'
 import ResetPassword from './Pages/ResetPassword.jsx'
+import Donation from './Pages/Donation.jsx'
+import LegalPage from './Pages/LegalPage.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import ProtectedRoute from './routes/ProtectedRoute.jsx'
 import DashboardLayout from './Layouts/DashboardLayout.jsx'
@@ -61,6 +63,10 @@ const adminLinks = [
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
+  { path: '/faire-un-don', element: <Donation /> },
+  { path: '/mentions-legales', element: <LegalPage type="legal" /> },
+  { path: '/conditions-generales-utilisation', element: <LegalPage type="terms" /> },
+  { path: '/politique-confidentialite', element: <LegalPage type="privacy" /> },
   { path: '/actualites', element: <NewsIndex /> },
   { path: '/actualites/:slug', element: <NewsArticle /> },
   { path: '/evenements/:id', element: <EventDetail /> },
