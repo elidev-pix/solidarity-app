@@ -18,16 +18,18 @@ function MemberDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const year = new Date().getFullYear();
+  const [contributionYear, setContributionYear] = useState(year);
 
   useEffect(() => {
     let active = true;
     Promise.all([
       eventApi.getAll(),
       participationApi.getMine(),
-      contributionApi.getMine(year),
+      contributionApi.getMine(),
       initiativeApi.getMine(),
     ]).then(([events, participations, contributions, initiatives]) => {
       if (!active) return;
+      setContributionYear(contributions.data.year || year);
       setDashboard({
         events: Array.isArray(events.data) ? events.data : [],
         participations: Array.isArray(participations.data) ? participations.data : [],
@@ -48,7 +50,7 @@ function MemberDashboard() {
       if (!Number.isNaN(date.getTime())) values[date.getMonth()] += Number(contribution.amount || 0);
     });
     return values;
-  }, [dashboard.contributions, year]);
+  }, [dashboard.contributions]);
 
   const activityMonthly = useMemo(() => {
     const values = Array(12).fill(0);
@@ -85,7 +87,7 @@ function MemberDashboard() {
       <section className="space-y-4">
         <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#D6336C]">MON ENGAGEMENT</p><h2 className="mt-1 text-xl font-bold text-gray-900">Mon activité en chiffres</h2><p className="mt-1 text-sm text-gray-500">Votre progression personnelle sur l'année {year}.</p></div>
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <article className="min-w-0 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Wallet size={17} className="text-[#D6336C]"/>Mes cotisations</div><p className="mt-2 text-2xl font-bold text-gray-900">{money(totalPaid)} <span className="text-sm font-semibold text-gray-400">FCFA</span></p><p className="mt-1 text-xs text-gray-400">Versements mensuels en {year}</p></div><span className="rounded-xl bg-[#D6336C]/10 p-3 text-[#D6336C]"><TrendingUp size={20}/></span></div><div className="mt-6">{loading ? <div className="h-36 animate-pulse rounded-xl bg-gray-50"/> : <MiniBars values={monthly}/>}</div></article>
+          <article className="min-w-0 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Wallet size={17} className="text-[#D6336C]"/>Mes cotisations</div><p className="mt-2 text-2xl font-bold text-gray-900">{money(totalPaid)} <span className="text-sm font-semibold text-gray-400">FCFA</span></p><p className="mt-1 text-xs text-gray-400">Versements mensuels en {contributionYear}</p></div><span className="rounded-xl bg-[#D6336C]/10 p-3 text-[#D6336C]"><TrendingUp size={20}/></span></div><div className="mt-6">{loading ? <div className="h-36 animate-pulse rounded-xl bg-gray-50"/> : <MiniBars values={monthly}/>}</div></article>
           <article className="min-w-0 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Activity size={17} className="text-[#B36CB2]"/>Mes participations</div><p className="mt-2 text-2xl font-bold text-gray-900">{participationCount} <span className="text-sm font-semibold text-gray-400">participation(s)</span></p><p className="mt-1 text-xs text-gray-400">Présences validées par mois</p></div><span className="rounded-xl bg-[#B36CB2]/10 p-3 text-[#B36CB2]"><CalendarCheck size={20}/></span></div><div className="mt-6">{loading ? <div className="h-36 animate-pulse rounded-xl bg-gray-50"/> : <MiniBars values={activityMonthly} color="#B36CB2"/>}</div></article>
         </div>
       </section>
