@@ -97,7 +97,7 @@ export default function AdminNews() {
   const inputClass = "w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm outline-none focus:border-[#D6336C]";
 
   return (
-    <div className="p-6">
+    <div className="min-w-0 p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div><h1 className="font-fraunces text-2xl font-bold text-gray-800">Actualités</h1><p className="mt-1 text-sm text-gray-500">Gérez le magazine public de Solidarity Group.</p></div>
         <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#D6336C] px-4 py-2.5 text-sm font-semibold text-white"><Plus size={16}/> Nouvelle actualité</button>
