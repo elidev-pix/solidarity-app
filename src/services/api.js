@@ -76,6 +76,8 @@ export const contributionApi = {
     getMine: (year) => api.get("/contributions/me", { params: { year } }),
     getForUser: (userId) => api.get("/contributions/user/" + userId),
     getAll: (year) => api.get("/contributions", { params: { year } }),
+    update: (id, data) => api.put("/contributions/" + id, data),
+    remove: (id) => api.delete("/contributions/" + id),
 };
 
 export const initiativeApi = {
