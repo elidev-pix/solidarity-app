@@ -54,14 +54,14 @@ function MemberDashboard() {
     const values = Array(12).fill(0);
     dashboard.participations.forEach((participation) => {
       const date = new Date(participation.validatedAt || participation.createdAt);
-      if (!Number.isNaN(date.getTime()) && date.getFullYear() === year && ["attended", "registered"].includes(participation.status)) values[date.getMonth()] += 1;
+      if (!Number.isNaN(date.getTime()) && date.getFullYear() === year && participation.status === "attended") values[date.getMonth()] += 1;
     });
     return values;
   }, [dashboard.participations, year]);
 
   const upcomingEvents = dashboard.events.filter((event) => event.status !== "cancelled" && event.status !== "completed" && new Date(event.startDate) >= new Date()).length;
   const totalPaid = dashboard.contributions?.totalPaid || 0;
-  const participationCount = dashboard.participations.length;
+  const participationCount = dashboard.participations.filter((participation) => participation.status === "attended").length;
   const userName = session?.user?.fullName || "Membre";
 
   return (
@@ -76,7 +76,7 @@ function MemberDashboard() {
       <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {loading ? Array.from({ length: 4 }).map((_, index) => <div key={index} className="h-36 animate-pulse rounded-2xl bg-white"/> : <>
           <StatCard icon={CalendarCheck} label="Activités à venir" value={upcomingEvents}/>
-          <StatCard icon={Users} label="Mes participations" value={participationCount}/>
+          <StatCard icon={Users} label="Participations validées" value={participationCount}/>
           <StatCard icon={Wallet} label="Cotisations versées" value={`${money(totalPaid)} FCFA`}/>
           <StatCard icon={Lightbulb} label="Mes initiatives" value={dashboard.initiatives.length}/>
         </>}
@@ -86,7 +86,7 @@ function MemberDashboard() {
         <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#D6336C]">MON ENGAGEMENT</p><h2 className="mt-1 text-xl font-bold text-gray-900">Mon activité en chiffres</h2><p className="mt-1 text-sm text-gray-500">Votre progression personnelle sur l'année {year}.</p></div>
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <article className="min-w-0 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Wallet size={17} className="text-[#D6336C]"/>Mes cotisations</div><p className="mt-2 text-2xl font-bold text-gray-900">{money(totalPaid)} <span className="text-sm font-semibold text-gray-400">FCFA</span></p><p className="mt-1 text-xs text-gray-400">Versements mensuels en {year}</p></div><span className="rounded-xl bg-[#D6336C]/10 p-3 text-[#D6336C]"><TrendingUp size={20}/></span></div><div className="mt-6">{loading ? <div className="h-36 animate-pulse rounded-xl bg-gray-50"/> : <MiniBars values={monthly}/>}</div></article>
-          <article className="min-w-0 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Activity size={17} className="text-[#B36CB2]"/>Mes participations</div><p className="mt-2 text-2xl font-bold text-gray-900">{participationCount} <span className="text-sm font-semibold text-gray-400">participation(s)</span></p><p className="mt-1 text-xs text-gray-400">Inscriptions et présences enregistrées par mois</p></div><span className="rounded-xl bg-[#B36CB2]/10 p-3 text-[#B36CB2]"><CalendarCheck size={20}/></span></div><div className="mt-6">{loading ? <div className="h-36 animate-pulse rounded-xl bg-gray-50"/> : <MiniBars values={activityMonthly} color="#B36CB2"/>}</div></article>
+          <article className="min-w-0 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6"><div className="flex items-start justify-between gap-3"><div><div className="flex items-center gap-2 text-sm font-semibold text-gray-700"><Activity size={17} className="text-[#B36CB2]"/>Mes participations</div><p className="mt-2 text-2xl font-bold text-gray-900">{participationCount} <span className="text-sm font-semibold text-gray-400">participation(s)</span></p><p className="mt-1 text-xs text-gray-400">Présences validées par mois</p></div><span className="rounded-xl bg-[#B36CB2]/10 p-3 text-[#B36CB2]"><CalendarCheck size={20}/></span></div><div className="mt-6">{loading ? <div className="h-36 animate-pulse rounded-xl bg-gray-50"/> : <MiniBars values={activityMonthly} color="#B36CB2"/>}</div></article>
         </div>
       </section>
     </div>
