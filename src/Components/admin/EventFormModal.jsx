@@ -90,8 +90,7 @@ export default function EventFormModal({ open, onClose, onDone, event }) {
           <label className="space-y-1 text-sm font-medium">Date et heure de début *<input type="datetime-local" name="startDate" required value={form.startDate} onChange={change} className={inputClass}/></label>
           <label className="space-y-1 text-sm font-medium">Date et heure de fin<input type="datetime-local" name="endDate" value={form.endDate} onChange={change} className={inputClass}/></label>
           <div className="space-y-2 text-sm font-medium sm:col-span-2">Image de couverture
-            <input type="url" name="imageUrl" value={form.imageUrl} onChange={change} className={inputClass} placeholder="URL Appwrite ou https://…"/>
-            <label className="block text-xs text-gray-500">Ou importer une image JPEG, PNG ou WebP (5 Mo maximum)</label>
+            <label className="block text-xs text-gray-500">Importer une image JPEG, PNG ou WebP (5 Mo maximum). Le fichier sera envoyé directement vers Appwrite Storage.</label>
             <input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadCover} disabled={uploadingImage || loading} className={inputClass}/>
             {uploadingImage && <p className="text-xs text-[#D6336C]">Envoi vers Appwrite…</p>}
             {form.imageUrl && <div className="space-y-2"><img src={form.imageUrl} alt="Aperçu de couverture" className="h-40 w-full rounded-xl object-cover"/><p className="text-xs font-medium text-green-700">Image hébergée sur Appwrite Storage</p></div>}
