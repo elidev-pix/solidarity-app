@@ -13,11 +13,12 @@ const cards = [
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState(null);
+    const [selectedYear, setSelectedYear] = useState(null);
     const [error, setError] = useState(false);
 
     useEffect(() => {
         let active = true;
-        statsApi.get()
+        statsApi.get(selectedYear || undefined)
             .then(({ data }) => {
                 if (active) {
                     setStats(data);
@@ -29,7 +30,7 @@ export default function AdminDashboard() {
                 if (active) setError(true);
             });
         return () => { active = false; };
-    }, []);
+    }, [selectedYear]);
 
     return (
         <div className="min-h-full bg-[#FAFAFC] p-5 sm:p-6 lg:p-8">
@@ -41,9 +42,9 @@ export default function AdminDashboard() {
                         {stats ? `Votre organisation en un coup d'œil · ${stats.year}` : "Vue d'ensemble de votre organisation"}
                     </p>
                 </div>
-                <div className="rounded-full border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-500 shadow-sm">
-                    {stats ? `Données ${stats.year}` : "Statistiques"}
-                </div>
+                <select aria-label="Année des statistiques" value={selectedYear ?? stats?.year ?? ""} onChange={(event) => setSelectedYear(Number(event.target.value))} className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-semibold text-gray-700 shadow-sm outline-none focus:border-[#D6336C]">
+                    {(stats?.availableYears || [stats?.currentYear || new Date().getFullYear()]).map((year) => <option key={year} value={year}>Données {year}</option>)}
+                </select>
             </div>
 
             {error && (
