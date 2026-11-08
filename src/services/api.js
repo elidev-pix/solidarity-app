@@ -17,7 +17,7 @@ export const authApi = {
 };
 
 export const userApi = {
-    create: (fullName, role) => api.post("/users/create", { fullName, role }),
+    create: (data) => api.post("/users/create", data),
     getAll: () => api.get("/users"),
     update: (id, data) => api.put("/users/" + id, data),
     archive: (id) => api.delete("/users/" + id),
