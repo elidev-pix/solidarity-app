@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { settingsApi, systemApi } from "@/services/api";
-import { Save, UserRound, Mail, ShieldCheck, AlertTriangle, Trash2, Settings2, CheckCircle2 } from "lucide-react";
+import { Save, UserRound, Mail, AlertTriangle, Trash2, Settings2, CheckCircle2 } from "lucide-react";
 
 const inputClass = "w-full min-w-0 rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm outline-none transition focus:border-[#D6336C] focus:ring-2 focus:ring-[#D6336C]/10";
 
