@@ -1,7 +1,7 @@
 // Path: src/Pages/admin/AdminInitiatives.jsx
 import { useEffect, useState } from "react";
 import { initiativeApi } from "@/services/api";
-import { Check, X } from "lucide-react";
+import { Check, X, Pencil, Trash2 } from "lucide-react";
 
 const statusStyles = {
     pending: "bg-yellow-50 text-yellow-700",
@@ -36,6 +36,33 @@ export default function AdminInitiatives() {
             fetchInitiatives();
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const handleEdit = async (initiative) => {
+        const title = window.prompt("Titre de l'initiative :", initiative.title);
+        if (title === null) return;
+        const description = window.prompt("Description :", initiative.description);
+        if (description === null) return;
+        if (!title.trim() || !description.trim()) {
+            alert("Le titre et la description sont obligatoires.");
+            return;
+        }
+        try {
+            await initiativeApi.update(initiative._id, { title: title.trim(), description: description.trim() });
+            await fetchInitiatives();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de modifier cette initiative.");
+        }
+    };
+
+    const handleDelete = async (initiative) => {
+        if (!window.confirm(`Supprimer l'initiative « ${initiative.title} » ?`)) return;
+        try {
+            await initiativeApi.remove(initiative._id);
+            await fetchInitiatives();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de supprimer cette initiative.");
         }
     };
 
@@ -78,6 +105,10 @@ export default function AdminInitiatives() {
                                     </button>
                                 </div>
                             )}
+                            <div className="mt-3 flex gap-2 border-t border-gray-100 pt-3">
+                                <button onClick={() => handleEdit(init)} className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600"><Pencil size={13}/> Modifier</button>
+                                <button onClick={() => handleDelete(init)} className="inline-flex items-center gap-1 rounded-full border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600"><Trash2 size={13}/> Supprimer</button>
+                            </div>
                         </div>
                     ))}
                 {!loading && initiatives.length === 0 && (
