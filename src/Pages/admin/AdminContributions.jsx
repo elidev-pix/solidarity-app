@@ -1,7 +1,7 @@
 // Path: src/Pages/admin/AdminContributions.jsx
 import { useEffect, useState } from "react";
 import { contributionApi, userApi } from "@/services/api";
-import { Plus } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 
 const currentYear = new Date().getFullYear();
 
@@ -42,6 +42,39 @@ export default function AdminContributions() {
         } catch (error) {
             console.error(error);
             alert("Erreur lors de l'enregistrement.");
+        }
+    };
+
+    const handleEdit = async (contribution) => {
+        const amountValue = window.prompt("Nouveau montant (FCFA) :", String(contribution.amount));
+        if (amountValue === null) return;
+        const amount = Number(amountValue);
+        if (!Number.isFinite(amount) || amount < 0) {
+            alert("Montant invalide.");
+            return;
+        }
+        const methods = ["especes", "mobile_money", "virement", "autre"];
+        const methodValue = window.prompt("Méthode (especes, mobile_money, virement, autre) :", contribution.method || "especes");
+        if (methodValue === null) return;
+        if (!methods.includes(methodValue)) {
+            alert("Méthode invalide.");
+            return;
+        }
+        try {
+            await contributionApi.update(contribution._id, { amount, method: methodValue });
+            await fetchData();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de modifier cette cotisation.");
+        }
+    };
+
+    const handleDelete = async (contribution) => {
+        if (!window.confirm(`Supprimer la cotisation de ${contribution.amount} FCFA pour ${contribution.user?.fullName || "ce membre"} ?`)) return;
+        try {
+            await contributionApi.remove(contribution._id);
+            await fetchData();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de supprimer cette cotisation.");
         }
     };
 
@@ -116,6 +149,7 @@ export default function AdminContributions() {
                             <th className="px-4 py-3">Montant</th>
                             <th className="px-4 py-3">Méthode</th>
                             <th className="px-4 py-3">Date</th>
+                            <th className="px-4 py-3 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -129,6 +163,12 @@ export default function AdminContributions() {
                                     <td className="px-4 py-3 capitalize text-gray-500">{c.method}</td>
                                     <td className="px-4 py-3 text-gray-500">
                                         {new Date(c.paidAt).toLocaleDateString("fr-FR")}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <div className="flex justify-end gap-2">
+                                            <button onClick={() => handleEdit(c)} aria-label="Modifier la cotisation" className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50"><Pencil size={14}/></button>
+                                            <button onClick={() => handleDelete(c)} aria-label="Supprimer la cotisation" className="rounded-lg border border-red-200 p-2 text-red-600 hover:bg-red-50"><Trash2 size={14}/></button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
