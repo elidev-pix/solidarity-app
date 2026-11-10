@@ -22,7 +22,7 @@ export default function AdminEvents() {
     const fetchEvents = async () => {
         setLoading(true);
         try {
-            const { data } = await eventApi.getAll();
+            const { data } = await eventApi.getAdminAll();
             setEvents(data);
         } catch (error) {
             console.error(error);
