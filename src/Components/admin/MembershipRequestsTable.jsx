@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { membershipRequestApi } from "@/services/api";
 import CredentialsModal from "./CredentialsModal";
-import { Check, X, Clock } from "lucide-react";
+import { Check, X, Clock, Pencil, Trash2 } from "lucide-react";
 
 const statusStyles = {
     pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
@@ -70,6 +70,41 @@ export default function MembershipRequestsTable() {
         }
     };
 
+    const handleEdit = async (request) => {
+        const fullName = window.prompt("Nom complet :", request.fullName);
+        if (fullName === null) return;
+        const email = window.prompt("Adresse e-mail :", request.email);
+        if (email === null) return;
+        const phone = window.prompt("Téléphone :", request.phone);
+        if (phone === null) return;
+        if (!fullName.trim() || !email.trim() || !phone.trim()) {
+            alert("Le nom, l'e-mail et le téléphone sont obligatoires.");
+            return;
+        }
+        setProcessingId(request._id);
+        try {
+            await membershipRequestApi.update(request._id, { fullName: fullName.trim(), email: email.trim(), phone: phone.trim() });
+            await fetchRequests();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de modifier cette demande.");
+        } finally {
+            setProcessingId(null);
+        }
+    };
+
+    const handleDelete = async (request) => {
+        if (!window.confirm(`Supprimer définitivement la demande de ${request.fullName} ?`)) return;
+        setProcessingId(request._id);
+        try {
+            await membershipRequestApi.remove(request._id);
+            await fetchRequests();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de supprimer cette demande.");
+        } finally {
+            setProcessingId(null);
+        }
+    };
+
     if (loading) {
         return <p className="text-sm text-gray-500">Chargement des demandes...</p>;
     }
@@ -111,24 +146,20 @@ export default function MembershipRequestsTable() {
                                     {new Date(req.createdAt).toLocaleDateString("fr-FR")}
                                 </td>
                                 <td className="px-4 py-3">
-                                    {(req.status === "pending" || req.status === "waitlisted") && (
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => handleAccept(req._id)}
-                                                disabled={processingId === req._id}
-                                                className="flex items-center gap-1 rounded-full bg-[#D6336C] px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
-                                            >
-                                                <Check className="size-3.5" /> Accepter
-                                            </button>
-                                            <button
-                                                onClick={() => handleReject(req._id)}
-                                                disabled={processingId === req._id}
-                                                className="flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-50"
-                                            >
-                                                <X className="size-3.5" /> Rejeter
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div className="flex flex-wrap justify-end gap-2">
+                                        {(req.status === "pending" || req.status === "waitlisted") && (
+                                            <>
+                                                <button onClick={() => handleAccept(req._id)} disabled={processingId === req._id} className="flex items-center gap-1 rounded-full bg-[#D6336C] px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90 disabled:opacity-50">
+                                                    <Check className="size-3.5" /> Accepter
+                                                </button>
+                                                <button onClick={() => handleReject(req._id)} disabled={processingId === req._id} className="flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:opacity-50">
+                                                    <X className="size-3.5" /> Rejeter
+                                                </button>
+                                            </>
+                                        )}
+                                        <button onClick={() => handleEdit(req)} disabled={processingId === req._id} aria-label="Modifier la demande" className="rounded-lg border border-gray-200 p-2 text-gray-600 disabled:opacity-50"><Pencil size={13}/></button>
+                                        <button onClick={() => handleDelete(req)} disabled={processingId === req._id} aria-label="Supprimer la demande" className="rounded-lg border border-red-200 p-2 text-red-600 disabled:opacity-50"><Trash2 size={13}/></button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}
