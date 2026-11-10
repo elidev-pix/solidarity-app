@@ -34,10 +34,15 @@ export default function AdminMembers() {
     const handleAdd = async () => {
         const fullName = window.prompt("Nom complet du nouveau membre :");
         if (!fullName?.trim()) return;
+        const email = window.prompt("Adresse e-mail du membre (facultatif) :") || "";
+        const phone = window.prompt("Téléphone du membre (facultatif) :") || "";
         try {
-            const { data } = await userApi.create(fullName.trim(), "member");
+            const { data } = await userApi.create(fullName.trim(), "member", email.trim(), phone.trim());
             setCredentials(data.credentials);
             setCredModalOpen(true);
+            if (email.trim() && data.emailSent === false) {
+                alert("Le compte a été créé, mais l'e-mail n'a pas pu être envoyé. Les identifiants restent disponibles ici.");
+            }
             await fetchMembers();
         } catch (error) {
             console.error(error);
