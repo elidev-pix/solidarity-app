@@ -1,10 +1,11 @@
-// Path: src/Pages/admin/AdminSettings.jsx
 import { useEffect, useState } from "react";
 import { settingsApi } from "@/services/api";
 
 export default function AdminSettings() {
     const [form, setForm] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [testEmail, setTestEmail] = useState("");
+    const [sendingTest, setSendingTest] = useState(false);
 
     useEffect(() => {
         settingsApi.get().then(({ data }) => {
@@ -30,17 +31,34 @@ export default function AdminSettings() {
             alert("Paramètres enregistrés.");
         } catch (error) {
             console.error(error);
-            alert("Erreur lors de l'enregistrement.");
+            alert(error.response?.data?.message || "Erreur lors de l'enregistrement.");
         } finally {
             setSaving(false);
         }
     };
 
+    const handleTestEmail = async () => {
+        if (!testEmail.trim()) {
+            alert("Saisissez l'adresse e-mail qui recevra le test.");
+            return;
+        }
+        setSendingTest(true);
+        try {
+            const { data } = await settingsApi.testEmail(testEmail.trim());
+            alert(data.message || "E-mail de test envoyé.");
+        } catch (error) {
+            console.error(error);
+            alert(error.response?.data?.message || "Échec de l'envoi du test.");
+        } finally {
+            setSendingTest(false);
+        }
+    };
+
     return (
-        <div className="p-6 max-w-xl">
+        <div className="p-6 max-w-xl space-y-6">
             <h1 className="font-fraunces text-2xl font-bold text-gray-800">Paramètres</h1>
 
-            <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
                 <span className="text-sm font-semibold text-gray-700">Période d'adhésion</span>
                 <div className="mt-3 grid grid-cols-2 gap-3">
                     <input
@@ -74,6 +92,27 @@ export default function AdminSettings() {
                     className="mt-6 rounded-full bg-[#D6336C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
                 >
                     {saving ? "Enregistrement..." : "Enregistrer"}
+                </button>
+            </div>
+
+            <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                <h2 className="text-sm font-semibold text-gray-700">Tester la configuration e-mail</h2>
+                <p className="mt-1 text-sm text-gray-500">
+                    Envoyez un message de vérification pour confirmer que Resend est correctement configuré sur le serveur.
+                </p>
+                <input
+                    type="email"
+                    value={testEmail}
+                    onChange={(e) => setTestEmail(e.target.value)}
+                    placeholder="adresse@exemple.com"
+                    className="mt-4 w-full rounded-xl border border-gray-200 p-2.5 text-sm"
+                />
+                <button
+                    onClick={handleTestEmail}
+                    disabled={sendingTest}
+                    className="mt-3 rounded-full bg-[#D6336C] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+                >
+                    {sendingTest ? "Envoi du test..." : "Envoyer un e-mail de test"}
                 </button>
             </div>
         </div>
