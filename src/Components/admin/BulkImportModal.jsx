@@ -14,7 +14,11 @@ export default function BulkImportModal({ open, onClose, onDone }) {
             .split("\n")
             .map((line) => line.trim())
             .filter(Boolean)
-            .map((fullName) => ({ fullName }));
+            .map((line) => {
+                const [fullName = "", email = "", phone = ""] = line.split(";").map((value) => value.trim());
+                return { fullName, email, phone };
+            })
+            .filter((member) => member.fullName);
 
         if (members.length === 0) return;
 
@@ -22,10 +26,11 @@ export default function BulkImportModal({ open, onClose, onDone }) {
         try {
             const { data } = await userApi.bulkCreate(members);
             const report = data.created
-                .map((c) => `${c.fullName} — ${c.memberId} / ${c.tempPassword}`)
+                .map((c) => c.fullName + " — " + c.memberId + " / " + c.tempPassword + " — " + (c.emailSent === true ? "e-mail envoyé" : c.emailSent === false ? "e-mail non envoyé" : "sans e-mail"))
                 .join("\n");
             navigator.clipboard.writeText(report);
-            alert(`${data.created.length} membre(s) créé(s). Identifiants copiés dans le presse-papier.`);
+            const failedEmails = data.created.filter((member) => member.emailSent === false).length;
+            alert(data.created.length + " membre(s) créé(s). Identifiants copiés. " + (failedEmails ? failedEmails + " e-mail(s) non envoyé(s)." : "Les envois e-mail ont été traités."));
             setText("");
             onDone?.();
             onClose();
@@ -45,13 +50,13 @@ export default function BulkImportModal({ open, onClose, onDone }) {
                 </button>
 
                 <span className="font-semibold font-fraunces text-[#D6336C] text-2xl">Import de membres</span>
-                <p className="mt-2 text-sm text-gray-600">Un nom complet par ligne.</p>
+                <p className="mt-2 text-sm text-gray-600">Une personne par ligne : <span className="font-mono">Nom complet; e-mail; téléphone</span>. Les deux derniers champs sont facultatifs.</p>
 
                 <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     rows={8}
-                    placeholder={"Awa Traoré\nIssouf Kaboré\n..."}
+                    placeholder={"Awa Traoré; awa@example.com; +226 70 00 00 00\nIssouf Kaboré;; +226 76 00 00 00\n..."}
                     className="mt-4 w-full rounded-xl border border-gray-200 p-3 text-sm focus:border-[#D6336C] focus:outline-none"
                 />
 
