@@ -1,7 +1,7 @@
 // Path: src/Pages/member/MemberActivities.jsx
 import { useEffect, useState } from "react";
 import { eventApi, participationApi, initiativeApi } from "@/services/api";
-import { Calendar, MapPin, Lightbulb } from "lucide-react";
+import { Calendar, MapPin, Lightbulb, XCircle } from "lucide-react";
 
 export default function MemberActivities() {
     const [events, setEvents] = useState([]);
@@ -40,8 +40,22 @@ export default function MemberActivities() {
     };
 
     const handleUnavailable = async (eventId) => {
-        await participationApi.markUnavailable(eventId);
-        fetchAll();
+        try {
+            await participationApi.markUnavailable(eventId);
+            await fetchAll();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible d'enregistrer votre indisponibilité.");
+        }
+    };
+
+    const handleCancel = async (participation) => {
+        if (!window.confirm("Annuler votre participation à cet événement ?")) return;
+        try {
+            await participationApi.cancel(participation._id);
+            await fetchAll();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible d'annuler cette participation.");
+        }
     };
 
     const upcoming = events.filter((e) => e.status === "upcoming" || e.status === "ongoing");
@@ -91,9 +105,19 @@ export default function MemberActivities() {
                                     </div>
                                 )}
                                 {status && (
-                                    <p className="mt-4 text-xs font-semibold text-[#D6336C]">
-                                        Statut : {status === "registered" ? "Inscrit" : "Indisponible"}
-                                    </p>
+                                    <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                                        <p className="text-xs font-semibold text-[#D6336C]">
+                                            Statut : {status === "registered" ? "Inscrit" : "Indisponible"}
+                                        </p>
+                                        {["registered", "unavailable"].includes(status) && (
+                                            <button
+                                                onClick={() => handleCancel(myParticipations.find((p) => p.event?._id === ev._id))}
+                                                className="inline-flex items-center gap-1 rounded-full border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50"
+                                            >
+                                                <XCircle className="size-3.5" /> Annuler
+                                            </button>
+                                        )}
+                                    </div>
                                 )}
                             </div>
                         );
