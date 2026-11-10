@@ -84,6 +84,7 @@ export const initiativeApi = {
 export const settingsApi = {
     get: () => api.get("/settings"),
     update: (data) => api.put("/settings", data),
+    testEmail: (email) => api.post("/settings/test-email", { email }),
 };
 
 export const statsApi = {
