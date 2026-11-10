@@ -31,6 +31,8 @@ export const membershipRequestApi = {
     getAll: (status) => api.get("/membership-requests", { params: { status } }),
     accept: (id) => api.put("/membership-requests/" + id + "/accept"),
     reject: (id, reason) => api.put("/membership-requests/" + id + "/reject", { reason }),
+    update: (id, data) => api.put("/membership-requests/" + id, data),
+    remove: (id) => api.delete("/membership-requests/" + id),
 };
 
 export const newsApi = {
@@ -64,6 +66,7 @@ export const participationApi = {
     getMine: () => api.get("/participations/me"),
     getForEvent: (eventId) => api.get("/participations/event/" + eventId),
     validate: (id, status) => api.put("/participations/" + id + "/validate", { status }),
+    cancel: (id) => api.delete("/participations/" + id),
 };
 
 export const contributionApi = {
@@ -71,6 +74,8 @@ export const contributionApi = {
     getMine: (year) => api.get("/contributions/me", { params: { year } }),
     getForUser: (userId) => api.get("/contributions/user/" + userId),
     getAll: (year) => api.get("/contributions", { params: { year } }),
+    update: (id, data) => api.put("/contributions/" + id, data),
+    remove: (id) => api.delete("/contributions/" + id),
 };
 
 export const initiativeApi = {
@@ -79,6 +84,8 @@ export const initiativeApi = {
     getAll: (status) => api.get("/initiatives", { params: { status } }),
     review: (id, status, rejectionReason) =>
         api.put("/initiatives/" + id + "/review", { status, rejectionReason }),
+    update: (id, data) => api.put("/initiatives/" + id, data),
+    remove: (id) => api.delete("/initiatives/" + id),
 };
 
 export const settingsApi = {
