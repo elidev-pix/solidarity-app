@@ -1,7 +1,7 @@
 // Path: src/Components/admin/EventParticipantsModal.jsx
 import { useEffect, useState } from "react";
 import { participationApi } from "@/services/api";
-import { X, Check, XCircle } from "lucide-react";
+import { X, Check, XCircle, Trash2 } from "lucide-react";
 
 const statusLabels = {
     registered: "Inscrit",
@@ -43,6 +43,16 @@ export default function EventParticipantsModal({ open, onClose, event }) {
         }
     };
 
+    const handleDelete = async (participant) => {
+        if (!window.confirm(`Retirer ${participant.user?.fullName || "ce participant"} de l'événement ?`)) return;
+        try {
+            await participationApi.cancel(participant._id);
+            await fetchParticipants();
+        } catch (error) {
+            alert(error.response?.data?.message || "Impossible de supprimer cette participation.");
+        }
+    };
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
             <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl">
@@ -68,8 +78,9 @@ export default function EventParticipantsModal({ open, onClose, event }) {
                                     {p.user?.memberId} — {statusLabels[p.status]}
                                 </p>
                             </div>
+                            <div className="flex items-center gap-1.5">
                             {p.status === "registered" && (
-                                <div className="flex gap-1.5">
+                                <>
                                     <button
                                         onClick={() => handleValidate(p._id, "attended")}
                                         className="rounded-full bg-green-50 p-1.5 text-green-600 hover:bg-green-100"
@@ -84,8 +95,12 @@ export default function EventParticipantsModal({ open, onClose, event }) {
                                     >
                                         <XCircle className="size-4" />
                                     </button>
-                                </div>
+                                </>
                             )}
+                            <button onClick={() => handleDelete(p)} className="rounded-full bg-red-50 p-1.5 text-red-600 hover:bg-red-100" title="Supprimer la participation">
+                                <Trash2 className="size-4" />
+                            </button>
+                            </div>
                         </div>
                     ))}
                 </div>
