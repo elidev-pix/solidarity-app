@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowDown, ArrowRight, ArrowUpRight, CalendarDays, Check, Heart, HeartHandshake, Menu, MapPin, Users, HandHeart, Sparkles, Instagram, Facebook, Mail, Phone, X } from "lucide-react";
-import { eventApi, newsApi, statsApi } from "./services/api.js";
+import { eventApi, newsApi } from "./services/api.js";
 import "./Home.css";
 
 const dateLabel = (value) => { if (!value) return ""; const d = new Date(value); return Number.isNaN(d.getTime()) ? "" : d.toLocaleDateString("fr-FR", { day:"numeric", month:"long", year:"numeric" }); };
@@ -42,7 +42,6 @@ export default function Home() {
     let active = true;
     eventApi.getAll().then(({data}) => { if(active) setEvents((Array.isArray(data)?data:[]).filter(e => !["cancelled","completed"].includes(String(e.status||"").toLowerCase())).slice(0,3)); }).catch(e => console.error("Chargement des actions impossible :",e)).finally(() => {if(active)setLoadingEvents(false);});
     newsApi.getAll().then(({data}) => {if(active)setNews((Array.isArray(data)?data:[]).filter(n=>n.isPublished!==false).slice(0,3));}).catch(e=>console.error("Chargement des actualités impossible :",e)).finally(()=>{if(active)setLoadingNews(false);});
-    statsApi.get().then(({data})=>{if(active)setStats(data||null);}).catch(e=>console.error("Statistiques indisponibles :",e));
     return ()=>{active=false;};
   },[]);
   const impact = [
