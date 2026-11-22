@@ -36,7 +36,8 @@ function Header() {
 function Heading({ eyebrow, title, copy }) { return <div className="sg-section-heading"><span className="sg-eyebrow"><i/>{eyebrow}</span><h2>{title}</h2>{copy && <p>{copy}</p>}</div>; }
 
 export default function Home() {
-  const [events,setEvents] = useState([]), [news,setNews] = useState([]);\n  const stats = null;
+  const [events,setEvents] = useState([]), [news,setNews] = useState([]);
+  const stats = null;
   const [loadingEvents,setLoadingEvents] = useState(true), [loadingNews,setLoadingNews] = useState(true);
   useEffect(() => {
     let active = true;
@@ -47,8 +48,8 @@ export default function Home() {
   const impact = [
     {label:"Membres engagés",value:statValue(stats,["memberCount","totalMembers"]),icon:Users},
     {label:"Actions réalisées",value:statValue(stats,["totalEvents","eventCount","totalActions"]),icon:HandHeart},
-    {label:"Participations validées",value:statValue(stats,["totalParticipations"]),icon:HeartHandshake},
-    {label:"Cotisations collectées",value:statValue(stats,["totalCollected"]),icon:Heart,suffix:" FCFA"}
+    {label:"Bénéficiaires",value:statValue(stats,["totalBeneficiaries","beneficiaryCount"]),icon:HeartHandshake},
+    {label:"Personnes accompagnées",value:statValue(stats,["totalSupportedPersons","supportedPersons"]),icon:Heart}
   ];
   return <div className="sg-site" id="accueil">
     <div className="sg-topline"><span>Association apolitique et à but non lucratif</span><span>Depuis 2022 · Burkina Faso</span></div>
