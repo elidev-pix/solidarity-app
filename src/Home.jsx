@@ -37,7 +37,7 @@ function Hero() {
               Nous rejoindre <span className="grid h-8 w-8 place-items-center rounded-full border border-[#d9cbd2]"><ArrowRight size={16}/></span>
             </Link>
           </div>
-          <div className="mt-8 flex items-center gap-3.5 font-jakarta text-[10px] leading--relaxed text-[#8b818a] sm:mt-12">
+          <div className="mt-8 flex items-center gap-3.5 font-jakarta text-[10px] leading-relaxed text-[#8b818a] sm:mt-12">
             <div className="flex pl-1">
               <img src="/coms10.jpeg" alt="" className="-ml-1 h-8 w-8 rounded-full border-2 border-[#fbf7f8] object-cover" />
               <img src="/coms11.jpeg" alt="" className="-ml-2 h-8 w-8 rounded-full border-2 border-[#fbf7f8] object-cover" />
