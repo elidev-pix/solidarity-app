@@ -36,7 +36,7 @@ function Header() {
 function Heading({ eyebrow, title, copy }) { return <div className="sg-section-heading"><span className="sg-eyebrow"><i/>{eyebrow}</span><h2>{title}</h2>{copy && <p>{copy}</p>}</div>; }
 
 export default function Home() {
-  const [events,setEvents] = useState([]), [news,setNews] = useState([]), [stats,setStats] = useState(null);
+  const [events,setEvents] = useState([]), [news,setNews] = useState([]);\n  const stats = null;
   const [loadingEvents,setLoadingEvents] = useState(true), [loadingNews,setLoadingNews] = useState(true);
   useEffect(() => {
     let active = true;
